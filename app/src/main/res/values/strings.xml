@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Chess AI</string>
+    <string name="copyrights">Chess AI alrights reserved 2021</string>
+    <string name="endgames">Endgames</string>
+    <string name="vizualization">Vizualization</string>
+    <string name="visualization_desc">Improving your vision is a must for serious chess player.</string>
+    <string name="endgame_desc">Proven to be the most blocking area of improvement if not improved daily</string>
+    <string name="tactics">Tactics</string>
+    <string name="tactics_desc">Solve tactics that raised from your own games.</string>
+    <string name="openings">Openings</string>
+    <string name="openings_desc">From opening ideas to mastery, every opening has a story behind it.</string>
+</resources>
