@@ -33,7 +33,7 @@ class _AppController : MultiDexApplication() {
         MultiDex.install(this)
         INSTANCE = this
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        SharePrefData.getInstance().setContext(applicationContext)
+        SharePrefData.instance.setContext(applicationContext)
     }
 
 }

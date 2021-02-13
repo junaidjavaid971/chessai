@@ -9,6 +9,8 @@
         android:roundIcon="@id/iv_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.ChessboardActivity" />
+        <activity android:name=".activities.OptionsActivity" />
         <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

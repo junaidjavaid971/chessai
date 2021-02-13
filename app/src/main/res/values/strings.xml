@@ -9,4 +9,6 @@
     <string name="tactics_desc">Solve tactics that raised from your own games.</string>
     <string name="openings">Openings</string>
     <string name="openings_desc">From opening ideas to mastery, every opening has a story behind it.</string>
+    <string name="levels">Levels</string>
+    <string name="trainings">Trainings</string>
 </resources>
