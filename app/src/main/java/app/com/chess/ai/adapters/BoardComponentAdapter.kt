@@ -8,13 +8,20 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import app.com.chess.ai.R
+import app.com.chess.ai._AppController
 import app.com.chess.ai.adapters.BoardComponentAdapter.BoardComponentViewHolder
+import app.com.chess.ai.interfaces.ChessBoardListener
 
-class BoardComponentAdapter(private val context: Context) :
+class BoardComponentAdapter(
+    private val context: Context,
+    val chessBoardListener: ChessBoardListener,
+    val currentSquare: Int
+) :
     RecyclerView.Adapter<BoardComponentViewHolder>() {
     private var isOrange = false
     private var count = 8
     private var alphabet = 65
+    var isClickable = true
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoardComponentViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.board_component, parent, false)
@@ -22,45 +29,167 @@ class BoardComponentAdapter(private val context: Context) :
     }
 
     override fun onBindViewHolder(holder: BoardComponentViewHolder, position: Int) {
-        if (position % 9 == 0) {
-            isOrange = !isOrange
-            holder.tvAlphabet.visibility = View.VISIBLE
-            if (count != 0) {
-                holder.tvAlphabet.text = count.toString()
-            } else {
-                holder.tvAlphabet.text = ""
-            }
-            holder.view.visibility = View.GONE
-            count--
-            return
+        holder.tvAlphabet.setOnClickListener {
+            if (isClickable)
+                chessBoardListener.onChessSquareSelected(position)
         }
-        if (position > 72) {
-            holder.tvAlphabet.visibility = View.VISIBLE
-            holder.tvAlphabet.setText(alphabet.toChar().toString())
-            holder.view.visibility = View.GONE
-            alphabet++
-            return
+        if (_AppController.showAlphabets) {
+            showAlphabets(holder, position)
+        } else {
+            if (position % 8 == 0) {
+                isOrange = !isOrange
+            }
         }
         if (isOrange) {
             isOrange = !isOrange
-            holder.view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrange))
+            holder.tvAlphabet.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.colorOrange
+                )
+            )
         } else {
             isOrange = !isOrange
-            holder.view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
+            holder.tvAlphabet.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.colorWhite
+                )
+            )
+        }
+        if (position == currentSquare) {
+            holder.tvAlphabet.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.colorGreen
+                )
+            )
+        }
+    }
+
+    private fun showAlphabets(holder: BoardComponentViewHolder, position: Int) {
+        if (position % 8 == 0) {
+            isOrange = !isOrange
+            holder.tvAlphabet.visibility = View.VISIBLE
+            if (count != 0) {
+                if (isOrange) {
+                    isOrange = !isOrange
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorOrange
+                        )
+                    )
+                } else {
+                    isOrange = !isOrange
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorWhite
+                        )
+                    )
+                    holder.tvAlphabet.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorOrange
+                        )
+                    )
+                }
+                holder.tvAlphabet.text = count.toString()
+            }
+            count--
+            if (position == currentSquare) {
+                holder.tvAlphabet.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.colorGreen
+                    )
+                )
+            }
+            return
+        }
+        if (position == 56) {
+            isOrange = !isOrange
+            holder.tvAlphabet.visibility = View.VISIBLE
+            holder.tvAlphabet.text = count.toString() + "-" + alphabet.toChar().toString()
+            alphabet++
+            if (isOrange) {
+                isOrange = !isOrange
+                holder.tvAlphabet.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.colorOrange
+                    )
+                )
+            } else {
+                isOrange = !isOrange
+                holder.tvAlphabet.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.colorWhite
+                    )
+                )
+                holder.tvAlphabet.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.colorOrange
+                    )
+                )
+            }
+            if (position == currentSquare) {
+                holder.tvAlphabet.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.colorGreen
+                    )
+                )
+            }
+            return
+        }
+        if (position > 56) {
+            holder.tvAlphabet.visibility = View.VISIBLE
+            holder.tvAlphabet.text = alphabet.toChar().toString()
+            alphabet++
+            if (isOrange) {
+                isOrange = !isOrange
+                holder.tvAlphabet.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.colorOrange
+                    )
+                )
+            } else {
+                isOrange = !isOrange
+                holder.tvAlphabet.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.colorWhite
+                    )
+                )
+                holder.tvAlphabet.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.colorOrange
+                    )
+                )
+            }
+            if (position == currentSquare) {
+                holder.tvAlphabet.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.colorGreen
+                    )
+                )
+            }
+            return
         }
     }
 
     override fun getItemCount(): Int {
-        return 81
+        return 64
     }
 
     class BoardComponentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var view: View
-        var tvAlphabet: TextView
-
-        init {
-            view = itemView.findViewById(R.id.cell_view) as View
-            tvAlphabet = itemView.findViewById<View>(R.id.tv_alphabet) as TextView
-        }
+        var tvAlphabet: TextView = itemView.findViewById<View>(R.id.tv_alphabet) as TextView
     }
 }

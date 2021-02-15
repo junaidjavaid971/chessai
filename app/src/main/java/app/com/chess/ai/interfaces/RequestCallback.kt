@@ -1,9 +1,8 @@
-package app.com.chess.ai.interfaces;
+package app.com.chess.ai.interfaces
 
+import app.com.chess.ai.models.response.ResponseModel
 
-import app.com.chess.ai.models.response.ResponseModel;
-
-public abstract class RequestCallback {
-    public <t> void onResponse(ResponseModel<t> response, int code){};
-    public void onResponse(Boolean isSuccess, int code){};
+abstract class RequestCallback {
+    open fun <t> onResponse(response: ResponseModel<t>?, code: Int) {}
+    fun onResponse(isSuccess: Boolean?, code: Int) {}
 }

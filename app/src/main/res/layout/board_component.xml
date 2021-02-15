@@ -4,6 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
+<!--
     <View
         android:id="@+id/cell_view"
         android:layout_width="@dimen/_40sdp"
@@ -14,17 +15,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+-->
 
     <TextView
         android:id="@+id/tv_alphabet"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
         android:gravity="center"
-        android:text="A"
+        android:text=""
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/_18ssp"
         android:textStyle="bold"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

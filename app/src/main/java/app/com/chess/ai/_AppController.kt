@@ -4,8 +4,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.ViewDataBinding
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
-import app.com.chess.ai.utils.SharePrefData
 import app.com.chess.ai.activities.BaseActivity
+import app.com.chess.ai.utils.SharePrefData
 
 
 class _AppController : MultiDexApplication() {
@@ -13,6 +13,8 @@ class _AppController : MultiDexApplication() {
     companion object {
         var token: String = ""
         var INSTANCE: _AppController? = null
+        val showAlphabets = true
+        val timer: Long = 30000 //30000ms is 30 sec.
         var baseActivity: BaseActivity<ViewDataBinding>? = null
 
         fun setActivity(activity: BaseActivity<ViewDataBinding>) {
