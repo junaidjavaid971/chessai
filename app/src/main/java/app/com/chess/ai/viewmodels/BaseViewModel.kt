@@ -35,6 +35,7 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
 
     var viewClickedLiveData = MutableLiveData<Int>()
         protected set
+
     fun onBackPressed() {
         backPressLiveData.postValue(true)
     }
@@ -50,8 +51,7 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
             retryCount = 0
             return
         }
-        val method: Method
-        method = repo.javaClass.getDeclaredMethod(
+        val method: Method = repo.javaClass.getDeclaredMethod(
             methodName,
             RequestCallback::class.java,
             RequestModel::class.java
@@ -61,9 +61,9 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
         dialogLiveData.postValue(true)
 
         method.invoke(repo, object : RequestCallback() {
-            override fun <t> onResponse(response: ResponseModel<t>, code: Int) {
+            override fun <t> onResponse(response: ResponseModel<t>?, code: Int) {
                 dialogLiveData.postValue(false)
-                if (response.success) reqCallback.onResponse(response, code)
+                if (response?.success == true) reqCallback.onResponse(response, code)
                 else {
                     errorLiveData.postValue(response)
                 }

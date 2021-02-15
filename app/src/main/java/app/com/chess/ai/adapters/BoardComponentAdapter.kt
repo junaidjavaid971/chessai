@@ -34,7 +34,121 @@ class BoardComponentAdapter(
                 chessBoardListener.onChessSquareSelected(position)
         }
         if (_AppController.showAlphabets) {
-            showAlphabets(holder, position)
+            if (position % 8 == 0) {
+                isOrange = !isOrange
+                holder.tvAlphabet.visibility = View.VISIBLE
+                if (count != 0) {
+                    if (isOrange) {
+                        isOrange = !isOrange
+                        holder.tvAlphabet.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.colorOrange
+                            )
+                        )
+                    } else {
+                        isOrange = !isOrange
+                        holder.tvAlphabet.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.colorWhite
+                            )
+                        )
+                        holder.tvAlphabet.setTextColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.colorOrange
+                            )
+                        )
+                    }
+                    holder.tvAlphabet.text = count.toString()
+                }
+                count--
+                if (position == currentSquare) {
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorGreen
+                        )
+                    )
+                }
+                return
+            }
+            if (position == 56) {
+                isOrange = !isOrange
+                holder.tvAlphabet.visibility = View.VISIBLE
+                holder.tvAlphabet.text = count.toString() + "-" + alphabet.toChar().toString()
+                alphabet++
+                if (isOrange) {
+                    isOrange = !isOrange
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorOrange
+                        )
+                    )
+                } else {
+                    isOrange = !isOrange
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorWhite
+                        )
+                    )
+                    holder.tvAlphabet.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorOrange
+                        )
+                    )
+                }
+                if (position == currentSquare) {
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorGreen
+                        )
+                    )
+                }
+                return
+            }
+            if (position > 56) {
+                holder.tvAlphabet.visibility = View.VISIBLE
+                holder.tvAlphabet.text = alphabet.toChar().toString()
+                alphabet++
+                if (isOrange) {
+                    isOrange = !isOrange
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorOrange
+                        )
+                    )
+                } else {
+                    isOrange = !isOrange
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorWhite
+                        )
+                    )
+                    holder.tvAlphabet.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorOrange
+                        )
+                    )
+                }
+                if (position == currentSquare) {
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorGreen
+                        )
+                    )
+                }
+                return
+            }
         } else {
             if (position % 8 == 0) {
                 isOrange = !isOrange
@@ -64,124 +178,6 @@ class BoardComponentAdapter(
                     R.color.colorGreen
                 )
             )
-        }
-    }
-
-    private fun showAlphabets(holder: BoardComponentViewHolder, position: Int) {
-        if (position % 8 == 0) {
-            isOrange = !isOrange
-            holder.tvAlphabet.visibility = View.VISIBLE
-            if (count != 0) {
-                if (isOrange) {
-                    isOrange = !isOrange
-                    holder.tvAlphabet.setBackgroundColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.colorOrange
-                        )
-                    )
-                } else {
-                    isOrange = !isOrange
-                    holder.tvAlphabet.setBackgroundColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.colorWhite
-                        )
-                    )
-                    holder.tvAlphabet.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.colorOrange
-                        )
-                    )
-                }
-                holder.tvAlphabet.text = count.toString()
-            }
-            count--
-            if (position == currentSquare) {
-                holder.tvAlphabet.setBackgroundColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.colorGreen
-                    )
-                )
-            }
-            return
-        }
-        if (position == 56) {
-            isOrange = !isOrange
-            holder.tvAlphabet.visibility = View.VISIBLE
-            holder.tvAlphabet.text = count.toString() + "-" + alphabet.toChar().toString()
-            alphabet++
-            if (isOrange) {
-                isOrange = !isOrange
-                holder.tvAlphabet.setBackgroundColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.colorOrange
-                    )
-                )
-            } else {
-                isOrange = !isOrange
-                holder.tvAlphabet.setBackgroundColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.colorWhite
-                    )
-                )
-                holder.tvAlphabet.setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.colorOrange
-                    )
-                )
-            }
-            if (position == currentSquare) {
-                holder.tvAlphabet.setBackgroundColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.colorGreen
-                    )
-                )
-            }
-            return
-        }
-        if (position > 56) {
-            holder.tvAlphabet.visibility = View.VISIBLE
-            holder.tvAlphabet.text = alphabet.toChar().toString()
-            alphabet++
-            if (isOrange) {
-                isOrange = !isOrange
-                holder.tvAlphabet.setBackgroundColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.colorOrange
-                    )
-                )
-            } else {
-                isOrange = !isOrange
-                holder.tvAlphabet.setBackgroundColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.colorWhite
-                    )
-                )
-                holder.tvAlphabet.setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.colorOrange
-                    )
-                )
-            }
-            if (position == currentSquare) {
-                holder.tvAlphabet.setBackgroundColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.colorGreen
-                    )
-                )
-            }
-            return
         }
     }
 
