@@ -9,19 +9,20 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
+import app.com.chess.ai.activities.ChessboardActivity
 import app.com.chess.ai.adapters.BoardComponentAdapter.BoardComponentViewHolder
 import app.com.chess.ai.interfaces.ChessBoardListener
 
 class BoardComponentAdapter(
     private val context: Context,
     val chessBoardListener: ChessBoardListener,
-    val currentSquare: Int
+    val isClickable: Boolean,
+    val previouslyClickedSquare: ChessboardActivity.PreviouslyClickedSquare
 ) :
     RecyclerView.Adapter<BoardComponentViewHolder>() {
     private var isOrange = false
     private var count = 8
     private var alphabet = 65
-    var isClickable = true
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoardComponentViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.board_component, parent, false)
@@ -34,6 +35,53 @@ class BoardComponentAdapter(
                 chessBoardListener.onChessSquareSelected(position)
         }
         if (_AppController.showAlphabets) {
+            if (position == 56) {
+                isOrange = !isOrange
+                holder.tvAlphabet.visibility = View.VISIBLE
+                holder.tvAlphabet.text = count.toString() + "-" + alphabet.toChar().toString()
+                alphabet++
+                if (isOrange) {
+                    isOrange = !isOrange
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorOrange
+                        )
+                    )
+                } else {
+                    isOrange = !isOrange
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorWhite
+                        )
+                    )
+                    holder.tvAlphabet.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorOrange
+                        )
+                    )
+                }
+                if (position == previouslyClickedSquare.squarePosition) {
+                    if (previouslyClickedSquare.isCorrect) {
+                        holder.tvAlphabet.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.colorGreen
+                            )
+                        )
+                    } else {
+                        holder.tvAlphabet.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.colorRed
+                            )
+                        )
+                    }
+                }
+                return
+            }
             if (position % 8 == 0) {
                 isOrange = !isOrange
                 holder.tvAlphabet.visibility = View.VISIBLE
@@ -64,51 +112,22 @@ class BoardComponentAdapter(
                     holder.tvAlphabet.text = count.toString()
                 }
                 count--
-                if (position == currentSquare) {
-                    holder.tvAlphabet.setBackgroundColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.colorGreen
+                if (position == previouslyClickedSquare.squarePosition) {
+                    if (previouslyClickedSquare.isCorrect) {
+                        holder.tvAlphabet.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.colorGreen
+                            )
                         )
-                    )
-                }
-                return
-            }
-            if (position == 56) {
-                isOrange = !isOrange
-                holder.tvAlphabet.visibility = View.VISIBLE
-                holder.tvAlphabet.text = count.toString() + "-" + alphabet.toChar().toString()
-                alphabet++
-                if (isOrange) {
-                    isOrange = !isOrange
-                    holder.tvAlphabet.setBackgroundColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.colorOrange
+                    } else {
+                        holder.tvAlphabet.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.colorRed
+                            )
                         )
-                    )
-                } else {
-                    isOrange = !isOrange
-                    holder.tvAlphabet.setBackgroundColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.colorWhite
-                        )
-                    )
-                    holder.tvAlphabet.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.colorOrange
-                        )
-                    )
-                }
-                if (position == currentSquare) {
-                    holder.tvAlphabet.setBackgroundColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.colorGreen
-                        )
-                    )
+                    }
                 }
                 return
             }
@@ -139,13 +158,22 @@ class BoardComponentAdapter(
                         )
                     )
                 }
-                if (position == currentSquare) {
-                    holder.tvAlphabet.setBackgroundColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.colorGreen
+                if (position == previouslyClickedSquare.squarePosition) {
+                    if (previouslyClickedSquare.isCorrect) {
+                        holder.tvAlphabet.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.colorGreen
+                            )
                         )
-                    )
+                    } else {
+                        holder.tvAlphabet.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.colorRed
+                            )
+                        )
+                    }
                 }
                 return
             }
@@ -171,13 +199,22 @@ class BoardComponentAdapter(
                 )
             )
         }
-        if (position == currentSquare) {
-            holder.tvAlphabet.setBackgroundColor(
-                ContextCompat.getColor(
-                    context,
-                    R.color.colorGreen
+        if (position == previouslyClickedSquare.squarePosition) {
+            if (previouslyClickedSquare.isCorrect) {
+                holder.tvAlphabet.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.colorGreen
+                    )
                 )
-            )
+            } else {
+                holder.tvAlphabet.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.colorRed
+                    )
+                )
+            }
         }
     }
 

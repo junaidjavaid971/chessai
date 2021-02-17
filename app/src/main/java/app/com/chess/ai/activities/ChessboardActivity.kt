@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
+import android.view.View
 import android.view.Window
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,28 +26,53 @@ import kotlin.collections.HashMap
 
 class ChessboardActivity : BaseActivity<ActivityChessboardBinding>(), ChessBoardListener {
     var chessboardSquares = HashMap<Int, String>()
+    var previouslyClickedSquare = PreviouslyClickedSquare()
     var currentSquare: Int = 0
     lateinit var boardComponentAdapter: BoardComponentAdapter
     val arrayList: ArrayList<Displayer> = ArrayList()
-    var hits = "-"
-    var missed = "-"
+    var hits = ""
+    var missed = ""
     var score = 0
-    var timePerHit = System.currentTimeMillis()
-    var longestTimePerHit: Long = 0
+    var isClickable = false
+    var clickedTime: Long = 0
+    var longestDuration: Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindView(R.layout.activity_chessboard)
         supportActionBar?.hide()
+        clickedTime = System.currentTimeMillis()
         initChessboardSquares()
         initDisplayerAdapter()
-        startTimer()
         updateCurrentSquare()
+
+        binding?.btnStart?.setOnClickListener {
+            startTraining()
+        }
+    }
+
+    private fun startTraining() {
+        binding?.btnStart?.isEnabled = false
+        binding?.btnStart?.isClickable = false
+        object : CountDownTimer(4000, 1000) {
+            @SuppressLint("SetTextI18n")
+
+            override fun onTick(millisUntilFinished: Long) {
+                binding?.tvStartTimer?.text = (millisUntilFinished / 1000).toString()
+            }
+
+            override fun onFinish() {
+                isClickable = true
+                bindBoardRecyclerView()
+                binding?.flStart?.visibility = View.GONE
+                startTimer()
+            }
+        }.start()
     }
 
     override fun onChessSquareSelected(position: Int) {
-        val duration = System.currentTimeMillis() - timePerHit
-        if (duration > longestTimePerHit) {
-            longestTimePerHit = duration
+        val duration = System.currentTimeMillis() - clickedTime
+        if (duration > longestDuration) {
+            longestDuration = duration
         }
         val displayer = Displayer(chessboardSquares[position], true)
         if (position != currentSquare) {
@@ -56,6 +82,7 @@ class ChessboardActivity : BaseActivity<ActivityChessboardBinding>(), ChessBoard
             hits += chessboardSquares[position] + " "
             score++
         }
+        previouslyClickedSquare = PreviouslyClickedSquare(position, position == currentSquare)
         arrayList.add(displayer)
         updateCurrentSquare()
         initDisplayerAdapter()
@@ -90,7 +117,7 @@ class ChessboardActivity : BaseActivity<ActivityChessboardBinding>(), ChessBoard
 
             override fun onFinish() {
                 binding?.tvTimer?.text = "00:00"
-                boardComponentAdapter.isClickable = false
+                isClickable = false
                 showDialog()
             }
         }.start()
@@ -106,7 +133,8 @@ class ChessboardActivity : BaseActivity<ActivityChessboardBinding>(), ChessBoard
 
     private fun bindBoardRecyclerView() {
         binding?.rvChessboard?.layoutManager = GridLayoutManager(this, 8)
-        boardComponentAdapter = BoardComponentAdapter(this, this, currentSquare)
+        boardComponentAdapter =
+            BoardComponentAdapter(this, this, isClickable, previouslyClickedSquare)
         binding?.rvChessboard?.adapter = boardComponentAdapter
     }
 
@@ -131,7 +159,7 @@ class ChessboardActivity : BaseActivity<ActivityChessboardBinding>(), ChessBoard
         dialogBinding.tvHit.text = hits
         dialogBinding.tvMissed.text = missed
         dialogBinding.tvScore.text = score.toString()
-        dialogBinding.tvTimeperhit.text = (longestTimePerHit / 1000).toString() + "s"
+        dialogBinding.tvTimeperhit.text = (longestDuration / 10000).toFloat().toString() + "s"
         var bestScore = SharePrefData.instance.getPrefInt(this, "bestScore")
         if (bestScore < score) {
             SharePrefData.instance.setPrefInt(this, "bestScore", score)
@@ -144,5 +172,16 @@ class ChessboardActivity : BaseActivity<ActivityChessboardBinding>(), ChessBoard
             finish()
         }
         dialog.show()
+    }
+
+    inner class PreviouslyClickedSquare {
+        var squarePosition = 100
+        var isCorrect = false
+
+        constructor() {}
+        constructor(squarePosition: Int?, isCorrect: Boolean) {
+            this.squarePosition = squarePosition!!
+            this.isCorrect = isCorrect
+        }
     }
 }

@@ -11,4 +11,10 @@
         <item name="android:windowBackground">@drawable/rounded_dialog</item>
     </style>
 
+
+    <style name="MyMaterialTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Add attributes here -->
+        <item name="colorPrimary">@color/colorYellowDark</item>
+        <item name="colorPrimaryDark">@color/colorYellowDark</item>
+    </style>
 </resources>
