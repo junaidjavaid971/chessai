@@ -9,6 +9,7 @@ import android.view.View
 import android.view.Window
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
 import app.com.chess.ai.adapters.BoardComponentAdapter
@@ -29,7 +30,7 @@ class ChessboardActivity : BaseActivity<ActivityChessboardBinding>(), ChessBoard
     var previouslyClickedSquare = PreviouslyClickedSquare()
     var currentSquare: Int = 0
     lateinit var boardComponentAdapter: BoardComponentAdapter
-    val arrayList: ArrayList<Displayer> = ArrayList()
+    var arrayList: ArrayList<Displayer> = ArrayList()
     var hits = ""
     var missed = ""
     var score = 0
@@ -126,7 +127,8 @@ class ChessboardActivity : BaseActivity<ActivityChessboardBinding>(), ChessBoard
     }
 
     private fun initDisplayerAdapter() {
-        binding?.rvDisplayer?.layoutManager = GridLayoutManager(this, 7)
+        binding?.rvDisplayer?.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         val adapter = DisplayerAdapter(arrayList)
         binding?.rvDisplayer?.adapter = adapter
     }
@@ -168,8 +170,8 @@ class ChessboardActivity : BaseActivity<ActivityChessboardBinding>(), ChessBoard
         dialogBinding.tvBestscore.text = bestScore.toString()
 
         dialogBinding.ivClose.setOnClickListener {
+            resetBoard()
             dialog.dismiss()
-            finish()
         }
         dialog.show()
     }
@@ -183,5 +185,27 @@ class ChessboardActivity : BaseActivity<ActivityChessboardBinding>(), ChessBoard
             this.squarePosition = squarePosition!!
             this.isCorrect = isCorrect
         }
+    }
+
+    private fun resetBoard() {
+        arrayList = ArrayList()
+        hits = ""
+        missed = ""
+        score = 0
+        isClickable = false
+        longestDuration = 0
+        previouslyClickedSquare = PreviouslyClickedSquare()
+        currentSquare = 0
+
+        binding?.flStart?.visibility = View.VISIBLE
+        binding?.btnStart?.text = "Restart"
+        binding?.btnStart?.isEnabled = true
+        binding?.btnStart?.isClickable = true
+        binding?.tvStartTimer?.text = ""
+
+        clickedTime = System.currentTimeMillis()
+        initChessboardSquares()
+        initDisplayerAdapter()
+        updateCurrentSquare()
     }
 }

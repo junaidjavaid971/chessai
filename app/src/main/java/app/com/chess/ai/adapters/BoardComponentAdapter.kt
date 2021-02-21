@@ -1,6 +1,7 @@
 package app.com.chess.ai.adapters
 
 import android.content.Context
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,6 +86,7 @@ class BoardComponentAdapter(
             if (position % 8 == 0) {
                 isOrange = !isOrange
                 holder.tvAlphabet.visibility = View.VISIBLE
+                holder.tvAlphabet.gravity = Gravity.LEFT or Gravity.TOP
                 if (count != 0) {
                     if (isOrange) {
                         isOrange = !isOrange
@@ -134,6 +136,7 @@ class BoardComponentAdapter(
             if (position > 56) {
                 holder.tvAlphabet.visibility = View.VISIBLE
                 holder.tvAlphabet.text = alphabet.toChar().toString()
+                holder.tvAlphabet.gravity = Gravity.BOTTOM or Gravity.RIGHT
                 alphabet++
                 if (isOrange) {
                     isOrange = !isOrange

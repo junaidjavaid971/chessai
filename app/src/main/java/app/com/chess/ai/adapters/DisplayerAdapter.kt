@@ -13,7 +13,6 @@ class DisplayerAdapter(
     val displayerList: ArrayList<Displayer>
 ) :
     RecyclerView.Adapter<DisplayerAdapter.DisplayerViewHolder>() {
-    private val limit = 14
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DisplayerViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.displayer_row, parent, false)
@@ -37,11 +36,7 @@ class DisplayerAdapter(
     }
 
     override fun getItemCount(): Int {
-        return if (displayerList.size > limit) {
-            limit
-        } else {
-            displayerList.size
-        }
+        return displayerList.size
     }
 
     class DisplayerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
