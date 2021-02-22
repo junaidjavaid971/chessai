@@ -39,7 +39,9 @@ class BoardComponentAdapter(
             if (position == 56) {
                 isOrange = !isOrange
                 holder.tvAlphabet.visibility = View.VISIBLE
-                holder.tvAlphabet.text = count.toString() + "-" + alphabet.toChar().toString()
+                holder.tvAlphabet.text = count.toString()
+                holder.tvAletter.text="A"
+                //alphabet.toChar().toString()
                 alphabet++
                 if (isOrange) {
                     isOrange = !isOrange
@@ -227,5 +229,6 @@ class BoardComponentAdapter(
 
     class BoardComponentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var tvAlphabet: TextView = itemView.findViewById<View>(R.id.tv_alphabet) as TextView
+        var tvAletter: TextView = itemView.findViewById<View>(R.id.tv_except_a_letter) as TextView
     }
 }
