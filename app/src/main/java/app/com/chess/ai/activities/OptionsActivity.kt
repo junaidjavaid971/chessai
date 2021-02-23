@@ -1,9 +1,11 @@
 package app.com.chess.ai.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import app.com.chess.ai.R
 import app.com.chess.ai.databinding.ActivityOptionsBinding
+import app.com.chess.ai.enums.Flows
 import app.com.chess.ai.viewmodels.MainViewmodel
 
 class OptionsActivity : BaseActivity<ActivityOptionsBinding>() {
@@ -22,10 +24,12 @@ class OptionsActivity : BaseActivity<ActivityOptionsBinding>() {
         viewModel.viewClickedLiveData.observe(this, {
             when (it) {
                 R.id.layout_training -> {
-                    addActivity(ChessboardActivity::class.java)
+                    val intent = Intent(this, ChessboardActivity::class.java)
+                    intent.putExtra("flow", Flows.FLOW_TRAINING.flowID)
+                    startActivity(intent)
                 }
                 R.id.layout_levels -> {
-                    showToast("Levels")
+                    addActivity(LevelsActivity::class.java)
                 }
             }
         })

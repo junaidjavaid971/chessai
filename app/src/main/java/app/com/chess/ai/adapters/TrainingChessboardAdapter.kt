@@ -10,27 +10,27 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
-import app.com.chess.ai.activities.ChessboardActivity
-import app.com.chess.ai.adapters.BoardComponentAdapter.BoardComponentViewHolder
+import app.com.chess.ai.activities.FragmentTrainingChessboard
+import app.com.chess.ai.adapters.TrainingChessboardAdapter.TrainingChessboardViewHolder
 import app.com.chess.ai.interfaces.ChessBoardListener
 
-class BoardComponentAdapter(
+class TrainingChessboardAdapter(
     private val context: Context,
     val chessBoardListener: ChessBoardListener,
     val isClickable: Boolean,
-    val previouslyClickedSquare: ChessboardActivity.PreviouslyClickedSquare
+    val previouslyClickedSquare: FragmentTrainingChessboard.PreviouslyClickedSquare
 ) :
-    RecyclerView.Adapter<BoardComponentViewHolder>() {
+    RecyclerView.Adapter<TrainingChessboardViewHolder>() {
     private var isOrange = false
     private var count = 8
     private var alphabet = 65
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoardComponentViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrainingChessboardViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.board_component, parent, false)
-        return BoardComponentViewHolder(itemView)
+        return TrainingChessboardViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: BoardComponentViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TrainingChessboardViewHolder, position: Int) {
         holder.tvAlphabet.setOnClickListener {
             if (isClickable)
                 chessBoardListener.onChessSquareSelected(position)
@@ -40,7 +40,7 @@ class BoardComponentAdapter(
                 isOrange = !isOrange
                 holder.tvAlphabet.visibility = View.VISIBLE
                 holder.tvAlphabet.text = count.toString()
-                holder.tvAletter.text="A"
+                holder.tvAletter.text = "A"
                 //alphabet.toChar().toString()
                 alphabet++
                 if (isOrange) {
@@ -227,7 +227,7 @@ class BoardComponentAdapter(
         return 64
     }
 
-    class BoardComponentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class TrainingChessboardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var tvAlphabet: TextView = itemView.findViewById<View>(R.id.tv_alphabet) as TextView
         var tvAletter: TextView = itemView.findViewById<View>(R.id.tv_except_a_letter) as TextView
     }

@@ -9,6 +9,7 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.LevelsActivity"></activity>
         <activity android:name=".activities.ChessboardActivity" />
         <activity android:name=".activities.OptionsActivity" />
         <activity android:name=".activities.SplashActivity">

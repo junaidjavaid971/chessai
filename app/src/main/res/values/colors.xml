@@ -10,4 +10,6 @@
     <color name="colorYellow">#ffea00</color>
     <color name="colorYellowDark">#ffd180</color>
     <color name="colorRed">#ff3d00</color>
+    <color name="colorOverlay">#99000000</color>
+    <color name="colorOverlayLight">#66000000</color>
 </resources>
