@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,19 +12,16 @@ import android.view.Window
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
 import app.com.chess.ai.adapters.DisplayerAdapter
 import app.com.chess.ai.adapters.LevelChessboardAdapter
-import app.com.chess.ai.adapters.TrainingChessboardAdapter
 import app.com.chess.ai.databinding.FragmentTrainingChessboardBinding
 import app.com.chess.ai.databinding.ProgressDialogRowBinding
 import app.com.chess.ai.interfaces.ChessBoardListener
 import app.com.chess.ai.models.global.ChessSquare
 import app.com.chess.ai.models.global.Displayer
 import app.com.chess.ai.utils.SharePrefData
-import app.com.chess.ai.viewmodels.MainViewmodel
 import com.google.gson.Gson
 import java.io.IOException
 import java.io.InputStream
@@ -34,21 +32,29 @@ import kotlin.collections.HashMap
 
 
 class FragmentLevelChessboard : Fragment(), ChessBoardListener {
+
+    //Hashmap and Objects
     lateinit var binding: FragmentTrainingChessboardBinding
-    var chessboardSquares = HashMap<Int, String>()
     var previouslyClickedSquare = PreviouslyClickedSquare()
-    var currentSquare: Int = 0
+    var chessboardSquares = HashMap<Int, String>()
+    lateinit var countDownTimer: CountDownTimer
+    lateinit var chessSquare: ChessSquare
+
+    //Arrays and Adapter
     lateinit var levelChessboardAdapter: LevelChessboardAdapter
     var arrayList: ArrayList<Displayer> = ArrayList()
-    var activeChessSquares: ArrayList<ChessSquare.ChessObject> = ArrayList()
+    var activeChessSquares: ArrayList<Int> = ArrayList()
+
+    //Glocal Variables
     var hits = ""
     var missed = ""
     var score = 0
     var isClickable = false
     var clickedTime: Long = 0
     var longestDuration: Long = 0
-    lateinit var countDownTimer: CountDownTimer
-    lateinit var chessSquare: ChessSquare
+    var level = 1
+    var currentSquare: Int = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,8 +74,8 @@ class FragmentLevelChessboard : Fragment(), ChessBoardListener {
             requireActivity().getResources().openRawResource(R.raw.chess_squares)
         )
         chessSquare = Gson().fromJson(myJson, ChessSquare::class.java)
-        getActiveChessSqaures()
         initChessboardSquares()
+        getActiveChessSqaures()
         initDisplayerAdapter()
         updateCurrentSquare()
 
@@ -107,15 +113,16 @@ class FragmentLevelChessboard : Fragment(), ChessBoardListener {
             longestDuration = duration
         }
         val displayer = Displayer(chessboardSquares[position], true)
-        val clickedSquare = activeChessSquares.indexOf(chessSquare.list[position])
-        if (clickedSquare != currentSquare) {
+
+        if (activeChessSquares[currentSquare] != position) {
             displayer.isCorrect = false
             missed += chessboardSquares[position] + " "
         } else {
             hits += chessboardSquares[position] + " "
             score++
         }
-        previouslyClickedSquare = PreviouslyClickedSquare(position, clickedSquare == currentSquare)
+        previouslyClickedSquare =
+            PreviouslyClickedSquare(position, activeChessSquares[currentSquare] == position)
         arrayList.add(displayer)
         updateCurrentSquare()
         initDisplayerAdapter()
@@ -170,7 +177,7 @@ class FragmentLevelChessboard : Fragment(), ChessBoardListener {
                 requireActivity(),
                 this,
                 isClickable,
-                chessSquare.getList(),
+                activeChessSquares,
                 previouslyClickedSquare
             )
         binding.rvChessboard.adapter = levelChessboardAdapter
@@ -183,7 +190,7 @@ class FragmentLevelChessboard : Fragment(), ChessBoardListener {
         }
         currentSquare = Random().nextInt(activeChessSquares.size - 1 - 0 + 1) + 0
         binding.tvCurrentSquare.text =
-            chessboardSquares[chessSquare.getList().indexOf(activeChessSquares[currentSquare])]
+            chessboardSquares[activeChessSquares[currentSquare]]
         bindBoardRecyclerView()
     }
 
@@ -271,10 +278,15 @@ class FragmentLevelChessboard : Fragment(), ChessBoardListener {
     }
 
     private fun getActiveChessSqaures() {
-        for (chessObject in chessSquare.getList()) {
-            if (chessObject.isActive)
-                activeChessSquares.add(chessObject)
+        val list =
+            chessSquare.list[level - 1].activeSquares.split(",") as ArrayList<String>
+        for (i in 0 until list.size) {
+            for (key in chessboardSquares.keys) {
+                val value: String? = chessboardSquares.get(key)
+                if (value == list[i].trim()) {
+                    activeChessSquares.add(key)
+                }
+            }
         }
     }
-
 }

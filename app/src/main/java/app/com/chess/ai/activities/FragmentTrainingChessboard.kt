@@ -29,21 +29,28 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class FragmentTrainingChessboard : Fragment(), ChessBoardListener {
-    lateinit var binding: FragmentTrainingChessboardBinding
-    lateinit var viewModel: MainViewmodel
-    var chessboardSquares = HashMap<Int, String>()
-    var previouslyClickedSquare = PreviouslyClickedSquare()
+
+    //Global Variables
     var currentSquare: Int = 0
-    lateinit var trainingChessboardAdapter: TrainingChessboardAdapter
-    var arrayList: ArrayList<Displayer> = ArrayList()
     var hits = ""
     var missed = ""
     var score = 0
     var isClickable = false
     var clickedTime: Long = 0
     var longestDuration: Long = 0
-    lateinit var countDownTimer: CountDownTimer
+
+    //Arrays
+    var chessboardSquares = HashMap<Int, String>()
+    var arrayList: ArrayList<Displayer> = ArrayList()
+
+    //Objects
+    lateinit var binding: FragmentTrainingChessboardBinding
     var baseActivity: BaseActivity<FragmentTrainingChessboardBinding>? = null
+    lateinit var trainingChessboardAdapter: TrainingChessboardAdapter
+    var previouslyClickedSquare = PreviouslyClickedSquare()
+    lateinit var countDownTimer: CountDownTimer
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -167,7 +174,7 @@ class FragmentTrainingChessboard : Fragment(), ChessBoardListener {
 
     fun showDialog() {
         val dialogBinding: ProgressDialogRowBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(activity),
+            LayoutInflater.from(requireActivity()),
             R.layout.progress_dialog_row,
             null,
             false

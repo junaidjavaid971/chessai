@@ -20,7 +20,7 @@ class LevelChessboardAdapter(
     private val context: Context,
     val chessBoardListener: ChessBoardListener,
     val isClickable: Boolean,
-    val arrayList: ArrayList<ChessSquare.ChessObject>,
+    val arrayList: ArrayList<Int>,
     val previouslyClickedSquare: FragmentLevelChessboard.PreviouslyClickedSquare
 ) :
     RecyclerView.Adapter<LevelChessboardAdapter.LevelChessboardViewHolder>() {
@@ -35,7 +35,7 @@ class LevelChessboardAdapter(
 
     override fun onBindViewHolder(holder: LevelChessboardViewHolder, position: Int) {
         holder.tvAlphabet.setOnClickListener {
-            if (isClickable && arrayList[position].isActive)
+            if (arrayList.contains(position))
                 chessBoardListener.onChessSquareSelected(position)
         }
         if (_AppController.showAlphabets) {
@@ -168,13 +168,13 @@ class LevelChessboardAdapter(
                 )
             )
         }
-        if (!arrayList[position].isActive) {
+        if (!arrayList.contains(position)) {
             holder.frameLayout.visibility = View.VISIBLE
         }
     }
 
     override fun getItemCount(): Int {
-        return arrayList.size
+        return 64
     }
 
     class LevelChessboardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -15,7 +15,7 @@ import app.com.chess.ai.enums.Flows
 import app.com.chess.ai.models.global.Level
 
 class LevelsAdapter(
-    val arrayList: ArrayList<Level>,
+    val arrayList: MutableList<Level>,
     val context: Context
 ) :
     RecyclerView.Adapter<LevelsAdapter.LevelsViewHolder>() {

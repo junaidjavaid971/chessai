@@ -1,11 +1,16 @@
 package app.com.chess.ai.activities
 
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.annotation.NonNull
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import app.com.chess.ai.R
-import app.com.chess.ai.adapters.LevelsAdapter
+import app.com.chess.ai._AppController
 import app.com.chess.ai.databinding.ActivityLevelsBinding
 import app.com.chess.ai.models.global.Level
+import kotlin.math.ceil
+
 
 class LevelsActivity : BaseActivity<ActivityLevelsBinding>() {
     var arrayList: ArrayList<Level> = ArrayList()
@@ -14,22 +19,53 @@ class LevelsActivity : BaseActivity<ActivityLevelsBinding>() {
         bindView(R.layout.activity_levels)
         supportActionBar?.hide()
         prepareLevels()
-        initLevelsAdapter()
+        init()
     }
 
-    private fun initLevelsAdapter() {
-        binding?.rvLevels?.layoutManager =
-            GridLayoutManager(this, 4)
-        val adapter = LevelsAdapter(arrayList, this)
-        binding?.rvLevels?.adapter = adapter
+    private fun init() {
+        // removing toolbar elevation
+        supportActionBar!!.elevation = 0f
+        binding!!.viewPager.adapter = ViewPagerFragmentAdapter(this)
+        binding?.pagerDots?.setViewPager2(binding!!.viewPager)
     }
 
     private fun prepareLevels() {
         var isLocked = false
-        for (i in 1..16) {
+        for (i in 1..70) {
             val level = Level(i.toString(), 0, isLocked)
             arrayList.add(level)
             isLocked = true
+        }
+    }
+
+    inner class ViewPagerFragmentAdapter(@NonNull fragmentActivity: FragmentActivity?) :
+        FragmentStateAdapter(fragmentActivity!!) {
+        @NonNull
+        override fun createFragment(position: Int): Fragment {
+            val count = ceil(arrayList.size.toFloat() / _AppController.levelsPerPage).toInt()
+            for (i in 0..count) {
+                if (i == position) {
+                    val startingIndex = i * _AppController.levelsPerPage
+                    if (arrayList.size - startingIndex >= _AppController.levelsPerPage) {
+
+                        val levelsArrayList = arrayList.subList(
+                            startingIndex,
+                            startingIndex + _AppController.levelsPerPage
+                        )
+
+                        return LevelsFragment(levelsArrayList)
+                    } else {
+                        val levelsArrayList =
+                            arrayList.subList(startingIndex, arrayList.size)
+                        return LevelsFragment(levelsArrayList)
+                    }
+                }
+            }
+            return Fragment()
+        }
+
+        override fun getItemCount(): Int {
+            return ceil(arrayList.size.toFloat() / _AppController.levelsPerPage).toInt()
         }
     }
 }

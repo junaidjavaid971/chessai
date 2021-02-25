@@ -9,10 +9,10 @@ public class ChessSquare {
     public ArrayList<ChessObject> list;
 
     static public class ChessObject {
-        @SerializedName("position")
-        public int position;
-        @SerializedName("isActive")
-        public boolean isActive;
+        @SerializedName("level")
+        public int level;
+        @SerializedName("activeSquares")
+        public String activeSquares;
     }
 
     public ArrayList<ChessObject> getList() {

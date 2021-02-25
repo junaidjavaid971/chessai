@@ -14,30 +14,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
-        tools:context=".activities.MainActivity">
+        tools:context=".fragments.FragmentViewPagerActivity">
 
         <TextView
             android:id="@+id/tv_level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_20sdp"
             android:text="@string/select_level"
             android:textColor="@color/colorWhite"
-            android:textSize="@dimen/_18ssp"
+            android:textSize="@dimen/_22ssp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/view_pager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_levels"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:padding="@dimen/_10sdp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@id/tv_copyrights"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_level" />
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
+            android:id="@+id/pager_dots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:dotsColor="@color/colorWhite"
+            app:dotsCornerRadius="8dp"
+            app:dotsSize="16dp"
+            app:dotsSpacing="4dp"
+            app:dotsWidthFactor="2.5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_pager"
+            app:progressMode="true"
+            app:selectedDotColor="@color/colorWhite" />
 
         <TextView
             android:id="@+id/tv_copyrights"
@@ -55,5 +69,4 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

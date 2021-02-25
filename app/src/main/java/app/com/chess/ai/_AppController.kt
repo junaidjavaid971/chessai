@@ -14,6 +14,7 @@ class _AppController : MultiDexApplication() {
         var token: String = ""
         var INSTANCE: _AppController? = null
         val showAlphabets = true
+        val levelsPerPage = 16
         val timer: Long = 30000 //30000ms is 30 sec.
         var baseActivity: BaseActivity<ViewDataBinding>? = null
 
