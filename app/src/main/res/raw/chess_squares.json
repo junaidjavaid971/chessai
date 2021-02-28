@@ -2,283 +2,353 @@
   "list": [
     {
       "level": 1,
-      "activeSquares": "D4, D5, E4, E5"
+      "activeSquares": "D4, D5, E4, E5",
+      "isUnlocked": true
     },
     {
       "level": 2,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 3,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 4,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 5,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 6,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 7,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 8,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 9,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 10,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 11,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 12,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 13,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 14,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 15,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 16,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 17,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 18,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 19,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 20,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 21,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 22,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 23,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 24,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 25,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 26,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 27,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 28,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 29,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 30,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 31,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 32,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 33,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 34,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 35,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 36,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 37,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 38,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 39,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 40,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 41,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 42,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 43,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 44,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 45,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 46,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 47,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 48,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 49,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 50,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 51,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 52,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 53,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 54,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 55,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 56,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 57,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 58,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 59,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 60,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 61,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 62,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 63,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 64,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 65,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 66,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 67,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 68,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 69,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     },
     {
       "level": 70,
-      "activeSquares": ""
+      "activeSquares": "",
+      "isUnlocked": false
     }
   ]
 }

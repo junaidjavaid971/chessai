@@ -27,15 +27,16 @@ class LevelsAdapter(
 
     override fun onBindViewHolder(holder: LevelsViewHolder, position: Int) {
         val level = arrayList[position]
-        if (level.isLocked) {
+        if (!level.isUnlocked) {
             holder.flLocked.visibility = View.VISIBLE
         }
-        holder.tvLevel.text = level.level
+        holder.tvLevel.text = (level.level?.toInt()?.plus(1)).toString()
         holder.itemView.setOnClickListener {
-            if (level.isLocked)
+            if (!level.isUnlocked)
                 return@setOnClickListener
             val intent = Intent(context, ChessboardActivity::class.java)
             intent.putExtra("flow", Flows.FLOW_LEVEL.flowID)
+            intent.putExtra("level", position + 1)
             context.startActivity(intent)
         }
     }

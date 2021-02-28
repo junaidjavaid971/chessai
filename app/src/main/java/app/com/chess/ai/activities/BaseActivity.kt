@@ -19,6 +19,8 @@ import app.com.chess.ai.utils.LoadingDialogFragment
 import app.com.chess.ai.viewmodels.BaseViewModel
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
+import java.io.IOException
+import java.io.InputStream
 import java.util.*
 
 
@@ -226,6 +228,16 @@ abstract class BaseActivity<Binding : ViewDataBinding> : AppCompatActivity() {
             })
         } catch (ex: java.lang.Exception) {
             print(ex.localizedMessage)
+        }
+    }
+
+    fun decodeJson(inputStream: InputStream): String? {
+        try {
+            val bytes = ByteArray(inputStream.available())
+            inputStream.read(bytes, 0, bytes.size)
+            return String(bytes)
+        } catch (e: IOException) {
+            return null
         }
     }
 }

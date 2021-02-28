@@ -8,33 +8,37 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
 import app.com.chess.ai.databinding.ActivityLevelsBinding
+import app.com.chess.ai.models.global.ChessSquare
 import app.com.chess.ai.models.global.Level
+import com.google.gson.Gson
 import kotlin.math.ceil
 
 
 class LevelsActivity : BaseActivity<ActivityLevelsBinding>() {
     var arrayList: ArrayList<Level> = ArrayList()
+    lateinit var chessSquare: ChessSquare
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindView(R.layout.activity_levels)
         supportActionBar?.hide()
+        val levelsJson = decodeJson(
+            resources.openRawResource(R.raw.chess_squares)
+        )
+        chessSquare = Gson().fromJson(levelsJson, ChessSquare::class.java)
         prepareLevels()
         init()
     }
 
     private fun init() {
-        // removing toolbar elevation
         supportActionBar!!.elevation = 0f
         binding!!.viewPager.adapter = ViewPagerFragmentAdapter(this)
         binding?.pagerDots?.setViewPager2(binding!!.viewPager)
     }
 
     private fun prepareLevels() {
-        var isLocked = false
-        for (i in 1..70) {
-            val level = Level(i.toString(), 0, isLocked)
+        for (i in 0 until chessSquare.list.size) {
+            val level = Level(i.toString(), 0, chessSquare.list[i].isUnlocked)
             arrayList.add(level)
-            isLocked = true
         }
     }
 

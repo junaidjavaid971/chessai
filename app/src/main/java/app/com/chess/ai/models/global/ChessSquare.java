@@ -13,6 +13,8 @@ public class ChessSquare {
         public int level;
         @SerializedName("activeSquares")
         public String activeSquares;
+        @SerializedName("isUnlocked")
+        public boolean isUnlocked;
     }
 
     public ArrayList<ChessObject> getList() {

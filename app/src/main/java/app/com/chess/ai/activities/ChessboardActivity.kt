@@ -15,8 +15,8 @@ class ChessboardActivity : BaseActivity<ActivityChessboardBinding>() {
         val currentFlow = intent.getIntExtra("flow", 0)
         if (currentFlow == Flows.FLOW_TRAINING.flowID) {
             replaceFragment(FragmentTrainingChessboard())
-        }else {
-            replaceFragment(FragmentLevelChessboard())
+        } else {
+            replaceFragment(FragmentLevelChessboard(intent.getIntExtra("level", 1)))
         }
     }
 }

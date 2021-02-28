@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +30,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
-class FragmentLevelChessboard : Fragment(), ChessBoardListener {
+class FragmentLevelChessboard(val level: Int) : Fragment(), ChessBoardListener {
 
     //Hashmap and Objects
     lateinit var binding: FragmentTrainingChessboardBinding
@@ -52,7 +51,6 @@ class FragmentLevelChessboard : Fragment(), ChessBoardListener {
     var isClickable = false
     var clickedTime: Long = 0
     var longestDuration: Long = 0
-    var level = 1
     var currentSquare: Int = 0
 
     override fun onCreateView(
@@ -279,11 +277,11 @@ class FragmentLevelChessboard : Fragment(), ChessBoardListener {
 
     private fun getActiveChessSqaures() {
         val list =
-            chessSquare.list[level - 1].activeSquares.split(",") as ArrayList<String>
-        for (i in 0 until list.size) {
+            chessSquare.list[level - 1].activeSquares.split(",")
+        for (element in list) {
             for (key in chessboardSquares.keys) {
                 val value: String? = chessboardSquares.get(key)
-                if (value == list[i].trim()) {
+                if (value == element.trim()) {
                     activeChessSquares.add(key)
                 }
             }

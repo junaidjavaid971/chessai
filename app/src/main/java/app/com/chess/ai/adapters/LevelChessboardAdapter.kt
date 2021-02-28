@@ -18,10 +18,10 @@ import java.util.*
 
 class LevelChessboardAdapter(
     private val context: Context,
-    val chessBoardListener: ChessBoardListener,
-    val isClickable: Boolean,
-    val arrayList: ArrayList<Int>,
-    val previouslyClickedSquare: FragmentLevelChessboard.PreviouslyClickedSquare
+    private val chessBoardListener: ChessBoardListener,
+    private val isClickable: Boolean,
+    private val arrayList: ArrayList<Int>,
+    private val previouslyClickedSquare: FragmentLevelChessboard.PreviouslyClickedSquare
 ) :
     RecyclerView.Adapter<LevelChessboardAdapter.LevelChessboardViewHolder>() {
     private var isOrange = false
@@ -35,8 +35,9 @@ class LevelChessboardAdapter(
 
     override fun onBindViewHolder(holder: LevelChessboardViewHolder, position: Int) {
         holder.tvAlphabet.setOnClickListener {
-            if (arrayList.contains(position))
+            if (arrayList.contains(position) && isClickable) {
                 chessBoardListener.onChessSquareSelected(position)
+            }
         }
         if (_AppController.showAlphabets) {
             if (position == 56) {
