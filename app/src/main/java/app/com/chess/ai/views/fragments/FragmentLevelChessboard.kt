@@ -1,4 +1,4 @@
-package app.com.chess.ai.activities
+package app.com.chess.ai.views.fragments
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -18,6 +18,7 @@ import app.com.chess.ai.adapters.LevelChessboardAdapter
 import app.com.chess.ai.databinding.FragmentTrainingChessboardBinding
 import app.com.chess.ai.databinding.ProgressDialogRowBinding
 import app.com.chess.ai.interfaces.ChessBoardListener
+import app.com.chess.ai.models.global.ChessPiece
 import app.com.chess.ai.models.global.ChessSquare
 import app.com.chess.ai.models.global.Displayer
 import app.com.chess.ai.utils.SharePrefData
@@ -124,6 +125,14 @@ class FragmentLevelChessboard(val level: Int) : Fragment(), ChessBoardListener {
         arrayList.add(displayer)
         updateCurrentSquare()
         initDisplayerAdapter()
+    }
+
+    override fun onChessSquareSelectedFirstTime(chessPiece: ChessPiece, position: Int) {
+
+    }
+
+    override fun onChessSquareMoved(chessPiece: ChessPiece, position: Int) {
+
     }
 
     private fun initChessboardSquares() {
@@ -277,8 +286,8 @@ class FragmentLevelChessboard(val level: Int) : Fragment(), ChessBoardListener {
 
     private fun getActiveChessSqaures() {
         val list =
-            chessSquare.list[level - 1].activeSquares.split(",")
-        for (element in list) {
+            chessSquare?.list?.get(level - 1)?.activeSquares?.split(",")
+        for (element in list!!) {
             for (key in chessboardSquares.keys) {
                 val value: String? = chessboardSquares.get(key)
                 if (value == element.trim()) {

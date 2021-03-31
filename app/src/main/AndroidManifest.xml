@@ -9,17 +9,17 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.LevelsActivity"></activity>
-        <activity android:name=".activities.ChessboardActivity" />
-        <activity android:name=".activities.OptionsActivity" />
-        <activity android:name=".activities.SplashActivity">
+        <activity android:name="app.com.chess.ai.views.activities.LevelsActivity"></activity>
+        <activity android:name="app.com.chess.ai.views.activities.ChessboardActivity" />
+        <activity android:name="app.com.chess.ai.views.activities.OptionsActivity" />
+        <activity android:name="app.com.chess.ai.views.activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name="app.com.chess.ai.views.activities.MainActivity" />
     </application>
 
 </manifest>

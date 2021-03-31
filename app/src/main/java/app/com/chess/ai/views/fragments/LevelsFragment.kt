@@ -1,4 +1,4 @@
-package app.com.chess.ai.activities
+package app.com.chess.ai.views.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -1,7 +1,6 @@
-package app.com.chess.ai.activities
+package app.com.chess.ai.views.activities
 
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import app.com.chess.ai.R
 import app.com.chess.ai.databinding.ActivityMainBinding

@@ -5,35 +5,59 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
-import app.com.chess.ai.activities.FragmentTrainingChessboard
+import app.com.chess.ai.activities.FragmentTrainingChessboardSquares
 import app.com.chess.ai.adapters.TrainingChessboardAdapter.TrainingChessboardViewHolder
+import app.com.chess.ai.enums.ChessPieceEnum
 import app.com.chess.ai.interfaces.ChessBoardListener
+import app.com.chess.ai.models.global.ChessPiece
+import app.com.chess.ai.models.global.PreviouslyClickedSquare
 
 class TrainingChessboardAdapter(
     private val context: Context,
     val chessBoardListener: ChessBoardListener,
     val isClickable: Boolean,
-    val previouslyClickedSquare: FragmentTrainingChessboard.PreviouslyClickedSquare
+    val previouslyClickedSquare: PreviouslyClickedSquare,
+    val chessArray: ArrayList<ChessPiece>,
+    val movementArray: ArrayList<Int>
 ) :
     RecyclerView.Adapter<TrainingChessboardViewHolder>() {
     private var isOrange = false
     private var count = 8
     private var alphabet = 65
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrainingChessboardViewHolder {
+    var arrayList: ArrayList<Int> = IntRange(0, 63).step(1).toList() as ArrayList<Int>
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): TrainingChessboardViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.board_component, parent, false)
         return TrainingChessboardViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: TrainingChessboardViewHolder, position: Int) {
-        holder.tvAlphabet.setOnClickListener {
-            if (isClickable)
-                chessBoardListener.onChessSquareSelected(position)
+        bindSquares(holder, position)
+        drawPieces(holder, position)
+    }
+
+    private fun bindSquares(holder: TrainingChessboardViewHolder, position: Int) {
+        holder.item.setOnClickListener {
+            if (isClickable) {
+                if (movementArray.contains(position)) {
+                    chessBoardListener.onChessSquareMoved(chessArray[position], position)
+                } else {
+                    chessBoardListener.onChessSquareSelectedFirstTime(
+                        chessArray[position],
+                        position
+                    )
+                }
+            }
         }
         if (_AppController.showAlphabets) {
             if (position == 56) {
@@ -223,12 +247,143 @@ class TrainingChessboardAdapter(
         }
     }
 
+    private fun drawPieces(holder: TrainingChessboardViewHolder, position: Int) {
+        if (movementArray.contains(position)) {
+            if (chessArray[position].piece == ChessPieceEnum.EMPTY.chessPiece) {
+                holder.ivDot.visibility = View.VISIBLE
+            }
+        }
+
+        val chessPiece = chessArray[position]
+        if (chessPiece.isBlack) {
+            when (chessPiece.piece) {
+                ChessPieceEnum.PAWN.chessPiece -> {
+                    holder.ivChessPiece.visibility = View.VISIBLE
+                    holder.ivChessPiece.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_pawn
+                        )
+                    )
+                }
+                ChessPieceEnum.ROOK.chessPiece -> {
+                    holder.ivChessPiece.visibility = View.VISIBLE
+                    holder.ivChessPiece.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_rook
+                        )
+                    )
+                }
+                ChessPieceEnum.BISHOP.chessPiece -> {
+                    holder.ivChessPiece.visibility = View.VISIBLE
+                    holder.ivChessPiece.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_bishop
+                        )
+                    )
+                }
+                ChessPieceEnum.KNIGHT.chessPiece -> {
+                    holder.ivChessPiece.visibility = View.VISIBLE
+                    holder.ivChessPiece.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_knight
+                        )
+                    )
+                }
+                ChessPieceEnum.QUEEN.chessPiece -> {
+                    holder.ivChessPiece.visibility = View.VISIBLE
+                    holder.ivChessPiece.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_queen
+                        )
+                    )
+                }
+                ChessPieceEnum.KING.chessPiece -> {
+                    holder.ivChessPiece.visibility = View.VISIBLE
+                    holder.ivChessPiece.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_king
+                        )
+                    )
+                }
+            }
+        } else {
+            when (chessPiece.piece) {
+                ChessPieceEnum.PAWN.chessPiece -> {
+                    holder.ivChessPiece.visibility = View.VISIBLE
+                    holder.ivChessPiece.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_pawn_white
+                        )
+                    )
+                }
+                ChessPieceEnum.ROOK.chessPiece -> {
+                    holder.ivChessPiece.visibility = View.VISIBLE
+                    holder.ivChessPiece.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_rook_white
+                        )
+                    )
+                }
+                ChessPieceEnum.BISHOP.chessPiece -> {
+                    holder.ivChessPiece.visibility = View.VISIBLE
+                    holder.ivChessPiece.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_bishop_white
+                        )
+                    )
+                }
+                ChessPieceEnum.KNIGHT.chessPiece -> {
+                    holder.ivChessPiece.visibility = View.VISIBLE
+                    holder.ivChessPiece.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_knight_white
+                        )
+                    )
+                }
+                ChessPieceEnum.QUEEN.chessPiece -> {
+                    holder.ivChessPiece.visibility = View.VISIBLE
+                    holder.ivChessPiece.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_queen_white
+                        )
+                    )
+                }
+                ChessPieceEnum.KING.chessPiece -> {
+                    holder.ivChessPiece.visibility = View.VISIBLE
+                    holder.ivChessPiece.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_king_white
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+
     override fun getItemCount(): Int {
-        return 64
+        return chessArray.size
     }
 
     class TrainingChessboardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var item: ConstraintLayout =
+            itemView.findViewById<View>(R.id.boardComponent) as ConstraintLayout
         var tvAlphabet: TextView = itemView.findViewById<View>(R.id.tv_alphabet) as TextView
         var tvAletter: TextView = itemView.findViewById<View>(R.id.tv_except_a_letter) as TextView
+        var ivChessPiece: ImageView = itemView.findViewById<View>(R.id.fl_piece) as ImageView
+        var ivDot: ImageView = itemView.findViewById<View>(R.id.fl_dot) as ImageView
+
     }
 }

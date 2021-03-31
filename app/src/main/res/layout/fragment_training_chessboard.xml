@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorPrimary"
-            tools:context=".activities.ChessboardActivity">
+            tools:context=".views.activities.ChessboardActivity">
 
             <TextView
                 android:id="@+id/tv_currentSquare"
@@ -59,9 +59,9 @@
                 android:layout_height="@dimen/_70sdp"
                 android:background="@drawable/ic_circle"
                 android:backgroundTint="@color/colorPrimaryDark"
+                android:clickable="false"
                 android:gravity="center"
                 android:padding="@dimen/_25sdp"
-                android:clickable="false"
                 android:src="@drawable/ic_restart"
                 app:layout_constraintBottom_toTopOf="@+id/rv_chessboard"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.ViewDataBinding
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
-import app.com.chess.ai.activities.BaseActivity
+import app.com.chess.ai.views.activities.BaseActivity
 import app.com.chess.ai.utils.SharePrefData
 
 

@@ -1,4 +1,4 @@
-package app.com.chess.ai.activities
+package app.com.chess.ai.views.activities
 
 import android.os.Bundle
 import androidx.annotation.NonNull
@@ -10,6 +10,7 @@ import app.com.chess.ai._AppController
 import app.com.chess.ai.databinding.ActivityLevelsBinding
 import app.com.chess.ai.models.global.ChessSquare
 import app.com.chess.ai.models.global.Level
+import app.com.chess.ai.views.fragments.LevelsFragment
 import com.google.gson.Gson
 import kotlin.math.ceil
 
@@ -36,8 +37,8 @@ class LevelsActivity : BaseActivity<ActivityLevelsBinding>() {
     }
 
     private fun prepareLevels() {
-        for (i in 0 until chessSquare.list.size) {
-            val level = Level(i.toString(), 0, chessSquare.list[i].isUnlocked)
+        for (i in 0 until chessSquare.list?.size!!) {
+            val level = Level(i.toString(), 0, chessSquare.list?.get(i)?.isUnlocked!!)
             arrayList.add(level)
         }
     }

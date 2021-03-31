@@ -5,38 +5,37 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
-import app.com.chess.ai.views.fragments.FragmentLevelChessboard
 import app.com.chess.ai.interfaces.ChessBoardListener
-import java.util.*
+import app.com.chess.ai.models.global.PreviouslyClickedSquare
 
-class LevelChessboardAdapter(
+class TrainingChessboardSquaresAdapter(
     private val context: Context,
-    private val chessBoardListener: ChessBoardListener,
-    private val isClickable: Boolean,
-    private val arrayList: ArrayList<Int>,
-    private val previouslyClickedSquare: FragmentLevelChessboard.PreviouslyClickedSquare
+    val chessBoardListener: ChessBoardListener,
+    val isClickable: Boolean,
+    val previouslyClickedSquare: PreviouslyClickedSquare
 ) :
-    RecyclerView.Adapter<LevelChessboardAdapter.LevelChessboardViewHolder>() {
+    RecyclerView.Adapter<TrainingChessboardSquaresAdapter.TrainingChessboardViewHolder>() {
     private var isOrange = false
     private var count = 8
     private var alphabet = 65
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LevelChessboardViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): TrainingChessboardViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.board_component, parent, false)
-        return LevelChessboardViewHolder(itemView)
+        return TrainingChessboardViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: LevelChessboardViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TrainingChessboardViewHolder, position: Int) {
         holder.tvAlphabet.setOnClickListener {
-            if (arrayList.contains(position) && isClickable) {
+            if (isClickable)
                 chessBoardListener.onChessSquareSelected(position)
-            }
         }
         if (_AppController.showAlphabets) {
             if (position == 56) {
@@ -46,7 +45,29 @@ class LevelChessboardAdapter(
                 holder.tvAletter.text = "A"
                 //alphabet.toChar().toString()
                 alphabet++
-                drawChessSquare(holder, position)
+                if (isOrange) {
+                    isOrange = !isOrange
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorOrange
+                        )
+                    )
+                } else {
+                    isOrange = !isOrange
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorWhite
+                        )
+                    )
+                    holder.tvAlphabet.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorOrange
+                        )
+                    )
+                }
                 if (position == previouslyClickedSquare.squarePosition) {
                     if (previouslyClickedSquare.isCorrect) {
                         holder.tvAlphabet.setBackgroundColor(
@@ -71,7 +92,29 @@ class LevelChessboardAdapter(
                 holder.tvAlphabet.visibility = View.VISIBLE
                 holder.tvAlphabet.gravity = Gravity.LEFT or Gravity.TOP
                 if (count != 0) {
-                    drawChessSquare(holder, position)
+                    if (isOrange) {
+                        isOrange = !isOrange
+                        holder.tvAlphabet.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.colorOrange
+                            )
+                        )
+                    } else {
+                        isOrange = !isOrange
+                        holder.tvAlphabet.setBackgroundColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.colorWhite
+                            )
+                        )
+                        holder.tvAlphabet.setTextColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.colorOrange
+                            )
+                        )
+                    }
                     holder.tvAlphabet.text = count.toString()
                 }
                 count--
@@ -99,7 +142,29 @@ class LevelChessboardAdapter(
                 holder.tvAlphabet.text = alphabet.toChar().toString()
                 holder.tvAlphabet.gravity = Gravity.BOTTOM or Gravity.RIGHT
                 alphabet++
-                drawChessSquare(holder, position)
+                if (isOrange) {
+                    isOrange = !isOrange
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorOrange
+                        )
+                    )
+                } else {
+                    isOrange = !isOrange
+                    holder.tvAlphabet.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorWhite
+                        )
+                    )
+                    holder.tvAlphabet.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.colorOrange
+                        )
+                    )
+                }
                 if (position == previouslyClickedSquare.squarePosition) {
                     if (previouslyClickedSquare.isCorrect) {
                         holder.tvAlphabet.setBackgroundColor(
@@ -124,7 +189,23 @@ class LevelChessboardAdapter(
                 isOrange = !isOrange
             }
         }
-        drawChessSquare(holder, position)
+        if (isOrange) {
+            isOrange = !isOrange
+            holder.tvAlphabet.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.colorOrange
+                )
+            )
+        } else {
+            isOrange = !isOrange
+            holder.tvAlphabet.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.colorWhite
+                )
+            )
+        }
         if (position == previouslyClickedSquare.squarePosition) {
             if (previouslyClickedSquare.isCorrect) {
                 holder.tvAlphabet.setBackgroundColor(
@@ -144,43 +225,12 @@ class LevelChessboardAdapter(
         }
     }
 
-    private fun drawChessSquare(holder: LevelChessboardViewHolder, position: Int) {
-        if (isOrange) {
-            isOrange = !isOrange
-            holder.tvAlphabet.setBackgroundColor(
-                ContextCompat.getColor(
-                    context,
-                    R.color.colorOrange
-                )
-            )
-        } else {
-            isOrange = !isOrange
-            holder.tvAlphabet.setBackgroundColor(
-                ContextCompat.getColor(
-                    context,
-                    R.color.colorWhite
-                )
-            )
-            holder.tvAlphabet.setTextColor(
-                ContextCompat.getColor(
-                    context,
-                    R.color.colorOrange
-                )
-            )
-        }
-        if (!arrayList.contains(position)) {
-            holder.frameLayout.visibility = View.VISIBLE
-        }
-    }
-
     override fun getItemCount(): Int {
         return 64
     }
 
-    class LevelChessboardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class TrainingChessboardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var tvAlphabet: TextView = itemView.findViewById<View>(R.id.tv_alphabet) as TextView
         var tvAletter: TextView = itemView.findViewById<View>(R.id.tv_except_a_letter) as TextView
-        var frameLayout: FrameLayout =
-            itemView.findViewById<View>(R.id.fl_disable) as FrameLayout
     }
 }

@@ -10,7 +10,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import app.com.chess.ai.R
-import app.com.chess.ai.activities.ChessboardActivity
+import app.com.chess.ai.views.activities.ChessboardActivity
 import app.com.chess.ai.enums.Flows
 import app.com.chess.ai.models.global.Level
 

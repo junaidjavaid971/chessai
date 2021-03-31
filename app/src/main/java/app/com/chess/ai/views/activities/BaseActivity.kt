@@ -1,9 +1,8 @@
-package app.com.chess.ai.activities
+package app.com.chess.ai.views.activities
 
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast

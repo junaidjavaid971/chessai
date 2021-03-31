@@ -10,25 +10,26 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
 import app.com.chess.ai.adapters.DisplayerAdapter
-import app.com.chess.ai.adapters.TrainingChessboardAdapter
+import app.com.chess.ai.adapters.TrainingChessboardSquaresAdapter
 import app.com.chess.ai.databinding.FragmentTrainingChessboardBinding
 import app.com.chess.ai.databinding.ProgressDialogRowBinding
+import app.com.chess.ai.enums.ChessPieceEnum
 import app.com.chess.ai.interfaces.ChessBoardListener
+import app.com.chess.ai.models.global.ChessPiece
 import app.com.chess.ai.models.global.Displayer
+import app.com.chess.ai.models.global.PreviouslyClickedSquare
 import app.com.chess.ai.utils.SharePrefData
-import app.com.chess.ai.viewmodels.MainViewmodel
+import app.com.chess.ai.views.activities.BaseActivity
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class FragmentTrainingChessboard : Fragment(), ChessBoardListener {
+class FragmentTrainingChessboardSquares : Fragment(), ChessBoardListener {
 
     //Global Variables
     var currentSquare: Int = 0
@@ -46,7 +47,7 @@ class FragmentTrainingChessboard : Fragment(), ChessBoardListener {
     //Objects
     lateinit var binding: FragmentTrainingChessboardBinding
     var baseActivity: BaseActivity<FragmentTrainingChessboardBinding>? = null
-    lateinit var trainingChessboardAdapter: TrainingChessboardAdapter
+    lateinit var TrainingChessboardSquaresAdapter: TrainingChessboardSquaresAdapter
     var previouslyClickedSquare = PreviouslyClickedSquare()
     lateinit var countDownTimer: CountDownTimer
 
@@ -117,6 +118,14 @@ class FragmentTrainingChessboard : Fragment(), ChessBoardListener {
         initDisplayerAdapter()
     }
 
+    override fun onChessSquareSelectedFirstTime(chessPiece: ChessPiece, position: Int) {
+
+    }
+
+    override fun onChessSquareMoved(chessPiece: ChessPiece, position: Int) {
+
+    }
+
     private fun initChessboardSquares() {
         var index = 0
         for (i in 8 downTo 1) {
@@ -154,16 +163,18 @@ class FragmentTrainingChessboard : Fragment(), ChessBoardListener {
 
     private fun initDisplayerAdapter() {
         binding.rvDisplayer.layoutManager =
-            GridLayoutManager(requireActivity(), 6)
+            GridLayoutManager(activity, 6)
         val adapter = DisplayerAdapter(arrayList)
         binding.rvDisplayer.adapter = adapter
     }
 
     private fun bindBoardRecyclerView() {
-        binding.rvChessboard.layoutManager = GridLayoutManager(requireActivity(), 8)
-        trainingChessboardAdapter =
-            TrainingChessboardAdapter(requireActivity(), this, isClickable, previouslyClickedSquare)
-        binding.rvChessboard.adapter = trainingChessboardAdapter
+        binding.rvChessboard.layoutManager = GridLayoutManager(activity, 8)
+        TrainingChessboardSquaresAdapter =
+            TrainingChessboardSquaresAdapter(
+                activity!!, this, isClickable, previouslyClickedSquare
+            )
+        binding.rvChessboard.adapter = TrainingChessboardSquaresAdapter
     }
 
     private fun updateCurrentSquare() {
@@ -174,12 +185,12 @@ class FragmentTrainingChessboard : Fragment(), ChessBoardListener {
 
     fun showDialog() {
         val dialogBinding: ProgressDialogRowBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(requireActivity()),
+            LayoutInflater.from(activity),
             R.layout.progress_dialog_row,
             null,
             false
         )
-        val dialog = Dialog(requireActivity(), R.style.RoundedDialog)
+        val dialog = Dialog(activity!!, R.style.RoundedDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(dialogBinding.root)
@@ -188,9 +199,9 @@ class FragmentTrainingChessboard : Fragment(), ChessBoardListener {
         dialogBinding.tvMissed.text = missed
         dialogBinding.tvScore.text = score.toString()
         dialogBinding.tvTimeperhit.text = (longestDuration / 10000).toFloat().toString() + "s"
-        var bestScore = SharePrefData.instance.getPrefInt(requireActivity(), "bestScore")
+        var bestScore = SharePrefData.instance.getPrefInt(activity, "bestScore")
         if (bestScore < score) {
-            SharePrefData.instance.setPrefInt(requireActivity(), "bestScore", score)
+            SharePrefData.instance.setPrefInt(activity, "bestScore", score)
             bestScore = score
         }
         dialogBinding.tvBestscore.text = bestScore.toString()
@@ -200,17 +211,6 @@ class FragmentTrainingChessboard : Fragment(), ChessBoardListener {
             dialog.dismiss()
         }
         dialog.show()
-    }
-
-    inner class PreviouslyClickedSquare {
-        var squarePosition = 100
-        var isCorrect = false
-
-        constructor() {}
-        constructor(squarePosition: Int?, isCorrect: Boolean) {
-            this.squarePosition = squarePosition!!
-            this.isCorrect = isCorrect
-        }
     }
 
     private fun resetBoard() {
