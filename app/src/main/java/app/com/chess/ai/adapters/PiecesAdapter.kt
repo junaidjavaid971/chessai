@@ -12,14 +12,14 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
-import app.com.chess.ai.activities.FragmentTrainingChessboardSquares
-import app.com.chess.ai.adapters.TrainingChessboardAdapter.TrainingChessboardViewHolder
+import app.com.chess.ai.adapters.PiecesAdapter.TrainingChessboardViewHolder
 import app.com.chess.ai.enums.ChessPieceEnum
 import app.com.chess.ai.interfaces.ChessBoardListener
 import app.com.chess.ai.models.global.ChessPiece
 import app.com.chess.ai.models.global.PreviouslyClickedSquare
+import app.com.chess.ai.utils.KnightSteps
 
-class TrainingChessboardAdapter(
+class PiecesAdapter(
     private val context: Context,
     val chessBoardListener: ChessBoardListener,
     val isClickable: Boolean,
@@ -43,11 +43,13 @@ class TrainingChessboardAdapter(
 
     override fun onBindViewHolder(holder: TrainingChessboardViewHolder, position: Int) {
         bindSquares(holder, position)
-        drawPieces(holder, position)
+//        drawPieces(holder, position)
+        if (position == 57)
+            drawOnePiece(holder, position)
     }
 
     private fun bindSquares(holder: TrainingChessboardViewHolder, position: Int) {
-        holder.item.setOnClickListener {
+        /*holder.item.setOnClickListener {
             if (isClickable) {
                 if (movementArray.contains(position)) {
                     chessBoardListener.onChessSquareMoved(chessArray[position], position)
@@ -58,7 +60,7 @@ class TrainingChessboardAdapter(
                     )
                 }
             }
-        }
+        }*/
         if (_AppController.showAlphabets) {
             if (position == 56) {
                 isOrange = !isOrange
@@ -245,6 +247,18 @@ class TrainingChessboardAdapter(
                 )
             }
         }
+    }
+
+    private fun drawOnePiece(holder: TrainingChessboardViewHolder, position: Int) {
+        holder.item.setOnClickListener {
+        }
+        holder.ivChessPiece.visibility = View.VISIBLE
+        holder.ivChessPiece.setImageDrawable(
+            ContextCompat.getDrawable(
+                context,
+                R.drawable.ic_knight_white
+            )
+        )
     }
 
     private fun drawPieces(holder: TrainingChessboardViewHolder, position: Int) {

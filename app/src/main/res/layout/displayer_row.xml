@@ -15,20 +15,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tv_wrong"
+        <ImageView
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
-            android:gravity="center"
-            android:text="D4"
-            android:textColor="@color/colorOrange"
-            android:textSize="@dimen/_18ssp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:src="@drawable/wrong" />
+            android:src="@drawable/ic_puzzle"
+            app:tint="@color/colorRed" />
     </LinearLayout>
 
 
@@ -43,20 +34,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tv_correct"
+        <ImageView
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
-            android:gravity="center"
-            android:text="D4"
-            android:textColor="@color/colorWhite"
-            android:textSize="@dimen/_18ssp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:src="@drawable/correct" />
+            android:src="@drawable/ic_puzzle"
+            app:tint="@color/colorGreen" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

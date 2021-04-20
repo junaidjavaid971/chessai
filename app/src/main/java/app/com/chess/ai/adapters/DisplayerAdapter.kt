@@ -25,12 +25,12 @@ class DisplayerAdapter(
             true -> {
                 holder.llCorrect.visibility = View.VISIBLE
                 holder.llWrong.visibility = View.GONE
-                holder.tvCorrect.text = displayer.chessSquare
+//                holder.tvCorrect.text = displayer.chessSquare
             }
             false -> {
                 holder.llCorrect.visibility = View.GONE
                 holder.llWrong.visibility = View.VISIBLE
-                holder.tvWrong.text = displayer.chessSquare
+//                holder.tvWrong.text = displayer.chessSquare
             }
         }
     }
@@ -40,8 +40,8 @@ class DisplayerAdapter(
     }
 
     class DisplayerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvWrong: TextView = itemView.findViewById<View>(R.id.tv_wrong) as TextView
-        var tvCorrect: TextView = itemView.findViewById<View>(R.id.tv_correct) as TextView
+        /*var tvWrong: TextView = itemView.findViewById<View>(R.id.tv_wrong) as TextView
+        var tvCorrect: TextView = itemView.findViewById<View>(R.id.tv_correct) as TextView*/
         var llCorrect: LinearLayout = itemView.findViewById<View>(R.id.ll_correct) as LinearLayout
         var llWrong: LinearLayout = itemView.findViewById<View>(R.id.ll_wrong) as LinearLayout
     }

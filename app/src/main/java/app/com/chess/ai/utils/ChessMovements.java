@@ -356,10 +356,14 @@ public class ChessMovements {
             movementList.add(p5);
             movementList.add(p8);
         }
-        movementList.add(p1);
-        movementList.add(p2);
-        movementList.add(p3);
-        movementList.add(p4);
+        if ((position + 1) % 8 != 0) {
+            movementList.add(p2);
+            movementList.add(p3);
+        }
+        if (position % 8 != 0) {
+            movementList.add(p1);
+            movementList.add(p4);
+        }
         return movementList;
     }
 

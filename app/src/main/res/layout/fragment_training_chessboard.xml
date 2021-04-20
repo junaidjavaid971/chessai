@@ -34,24 +34,44 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/rv_chessboard"
                 app:layout_constraintEnd_toStartOf="@id/iv_restart"
-                app:layout_constraintStart_toEndOf="@id/tv_timer"
+                app:layout_constraintStart_toEndOf="@id/layout_timer"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_timer"
+            <LinearLayout
+                android:id="@+id/layout_timer"
                 android:layout_width="@dimen/_70sdp"
                 android:layout_height="@dimen/_70sdp"
                 android:background="@drawable/ic_circle"
                 android:backgroundTint="@color/colorPrimaryDark"
                 android:gravity="center"
-                android:text="00:00"
-                android:textColor="@color/colorOrange"
-                android:textSize="@dimen/_18ssp"
-                android:textStyle="bold"
+                android:orientation="horizontal"
+                android:weightSum="2"
                 app:layout_constraintBottom_toTopOf="@+id/rv_chessboard"
                 app:layout_constraintEnd_toStartOf="@id/tv_currentSquare"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_timer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/_24ssp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:text="s"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/_12ssp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
 
             <ImageView
                 android:id="@+id/iv_restart"
@@ -85,10 +105,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_30sdp"
                 android:layout_marginEnd="@dimen/_30sdp"
-                android:layout_marginBottom="@dimen/_10sdp"
                 app:cardBackgroundColor="@color/colorPrimaryDark"
                 app:cardCornerRadius="@dimen/_10sdp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/cv_message"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rv_chessboard">
@@ -102,6 +121,31 @@
                     android:fadeScrollbars="false"
                     android:scrollbars="vertical"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_30sdp"
+                android:layout_marginEnd="@dimen/_30sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                app:cardBackgroundColor="@color/colorPrimaryDark"
+                app:cardCornerRadius="@dimen/_10sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cv_displayer">
+
+                <TextView
+                    android:id="@+id/tv_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp"
+                    android:text="@string/app_name"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/_14ssp" />
 
             </androidx.cardview.widget.CardView>
 
@@ -147,6 +191,28 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </FrameLayout>
+
+<!--
+            <FrameLayout
+                android:id="@+id/fl_correct_incorrect"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorOverlay">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/wrong" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </FrameLayout>
+-->
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </layout>
