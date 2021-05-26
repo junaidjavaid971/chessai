@@ -5,9 +5,9 @@ import app.com.chess.ai.R
 import app.com.chess.ai.activities.FragmentTrainingChessboardSquares
 import app.com.chess.ai.databinding.ActivityChessboardBinding
 import app.com.chess.ai.enums.Flows
+import app.com.chess.ai.views.fragments.EndgamePiecesFragment
 import app.com.chess.ai.views.fragments.FragmentLevelChessboard
 import app.com.chess.ai.views.fragments.PiecesFragment
-import app.com.chess.ai.views.fragments.TrainingPiecesFragment
 
 
 class ChessboardActivity : BaseActivity<ActivityChessboardBinding>() {
@@ -20,7 +20,7 @@ class ChessboardActivity : BaseActivity<ActivityChessboardBinding>() {
         if (currentFlow == Flows.FLOW_TRAINING_SQUARE.flowID) {
             replaceFragment(FragmentTrainingChessboardSquares())
         } else if (currentFlow == Flows.FLOW_TRAINING_PIECES.flowID) {
-            replaceFragment(TrainingPiecesFragment())
+            replaceFragment(PiecesFragment())
         } else {
             replaceFragment(FragmentLevelChessboard(intent.getIntExtra("level", 1)))
         }

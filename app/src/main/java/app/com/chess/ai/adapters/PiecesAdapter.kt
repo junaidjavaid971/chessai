@@ -43,13 +43,13 @@ class PiecesAdapter(
 
     override fun onBindViewHolder(holder: TrainingChessboardViewHolder, position: Int) {
         bindSquares(holder, position)
-//        drawPieces(holder, position)
-        if (position == 57)
-            drawOnePiece(holder, position)
+        drawPieces(holder, position)
+        /*if (position == 57)
+            drawOnePiece(holder, position)*/
     }
 
     private fun bindSquares(holder: TrainingChessboardViewHolder, position: Int) {
-        /*holder.item.setOnClickListener {
+        holder.item.setOnClickListener {
             if (isClickable) {
                 if (movementArray.contains(position)) {
                     chessBoardListener.onChessSquareMoved(chessArray[position], position)
@@ -60,7 +60,7 @@ class PiecesAdapter(
                     )
                 }
             }
-        }*/
+        }
         if (_AppController.showAlphabets) {
             if (position == 56) {
                 isOrange = !isOrange

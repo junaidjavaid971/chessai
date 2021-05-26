@@ -7,6 +7,7 @@ import app.com.chess.ai.R
 import app.com.chess.ai.databinding.ActivityOptionsBinding
 import app.com.chess.ai.enums.Flows
 import app.com.chess.ai.viewmodels.MainViewmodel
+import app.com.chess.ai.views.fragments.EndgamePiecesFragment
 import app.com.chess.ai.views.fragments.OptionsFragment
 
 class OptionsActivity : BaseActivity<ActivityOptionsBinding>() {
@@ -18,6 +19,11 @@ class OptionsActivity : BaseActivity<ActivityOptionsBinding>() {
         binding?.optionsActivity = viewModel
         supportActionBar?.hide()
 
-        replaceFragment(OptionsFragment())
+        val id = intent.getIntExtra("ID" , 0)
+        if(id == 1) {
+            replaceFragment(OptionsFragment())
+        }else {
+            replaceFragment(EndgamePiecesFragment())
+        }
     }
 }

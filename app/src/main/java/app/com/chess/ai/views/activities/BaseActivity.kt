@@ -181,8 +181,9 @@ abstract class BaseActivity<Binding : ViewDataBinding> : AppCompatActivity() {
         startActivity(intent)
     }
 
-    open fun addActivity(cls: Class<*>?) {
+    open fun addActivity(cls: Class<*>?, id : Int) {
         val intent = Intent(this, cls)
+        intent.putExtra("ID" , id)
         startActivity(intent)
     }
 

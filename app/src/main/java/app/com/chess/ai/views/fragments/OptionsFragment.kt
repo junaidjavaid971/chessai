@@ -42,7 +42,7 @@ class OptionsFragment : Fragment() {
             baseActivity?.replaceFragment(TrainingOptionsFragment())
         }
         binding.layoutLevels.setOnClickListener {
-            baseActivity?.addActivity(LevelsActivity::class.java)
+            baseActivity?.addActivity(LevelsActivity::class.java , 0)
         }
     }
 }

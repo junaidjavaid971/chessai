@@ -2,24 +2,28 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="app.com.chess.ai">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="app.com.chess.ai.views.activities.LevelsActivity"></activity>
-        <activity android:name="app.com.chess.ai.views.activities.ChessboardActivity" />
-        <activity android:name="app.com.chess.ai.views.activities.OptionsActivity" />
-        <activity android:name="app.com.chess.ai.views.activities.SplashActivity">
+        <activity android:name=".views.activities.LevelsActivity" />
+        <activity android:name=".views.activities.ChessboardActivity" />
+        <activity android:name=".views.activities.OptionsActivity" />
+        <activity android:name=".views.activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="app.com.chess.ai.views.activities.MainActivity" />
+        <activity android:name=".views.activities.MainActivity" />
     </application>
 
 </manifest>
