@@ -19,21 +19,20 @@ import app.com.chess.ai.models.global.ChessPiece
 import app.com.chess.ai.models.global.PreviouslyClickedSquare
 import app.com.chess.ai.utils.KnightSteps
 
-class PiecesAdapter(
+class EndgamePiecesAdapter(
     private val context: Context,
     val chessBoardListener: ChessBoardListener,
-    var isClickable: Boolean,
     val previouslyClickedSquare: PreviouslyClickedSquare,
     val chessArray: ArrayList<ChessPiece>,
     val movementArray: ArrayList<Int>
 ) :
-    RecyclerView.Adapter<TrainingChessboardViewHolder>() {
+    RecyclerView.Adapter<EndgamePiecesAdapter.TrainingChessboardViewHolder>() {
     private var isOrange = false
     private var count = 8
     private var alphabet = 65
     private var previousPosition = 100
     private var currentPosition = 100
-    var arrayList: ArrayList<Int> = IntRange(0, 63).step(1).toList() as ArrayList<Int>
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -50,15 +49,13 @@ class PiecesAdapter(
 
     private fun bindSquares(holder: TrainingChessboardViewHolder, position: Int) {
         holder.item.setOnClickListener {
-            if (isClickable) {
-                if (movementArray.contains(position)) {
-                    chessBoardListener.onChessSquareMoved(chessArray[position], position)
-                } else {
-                    chessBoardListener.onChessSquareSelectedFirstTime(
-                        chessArray[position],
-                        position
-                    )
-                }
+            if (movementArray.contains(position)) {
+                chessBoardListener.onChessSquareMoved(chessArray[position], position)
+            } else {
+                chessBoardListener.onChessSquareSelectedFirstTime(
+                    chessArray[position],
+                    position
+                )
             }
         }
         if (_AppController.showAlphabets) {
@@ -376,11 +373,6 @@ class PiecesAdapter(
                 }
             }
         }
-    }
-
-    @JvmName("setClickable1")
-    public fun setClickable(isClickable: Boolean) {
-        this.isClickable = isClickable
     }
 
     @JvmName("setClickable1")

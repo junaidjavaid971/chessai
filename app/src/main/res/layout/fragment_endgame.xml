@@ -21,73 +21,45 @@
             android:background="@color/colorPrimary"
             tools:context=".views.activities.ChessboardActivity">
 
-            <TextView
-                android:id="@+id/tv_currentSquare"
-                android:layout_width="@dimen/_70sdp"
-                android:layout_height="@dimen/_70sdp"
-                android:background="@drawable/ic_circle"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:gravity="center"
-                android:text="--"
-                android:textColor="@color/colorOrange"
-                android:textSize="@dimen/_25ssp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/rv_chessboard"
-                app:layout_constraintEnd_toStartOf="@id/iv_restart"
-                app:layout_constraintStart_toEndOf="@id/layout_timer"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <LinearLayout
-                android:id="@+id/layout_timer"
-                android:layout_width="@dimen/_70sdp"
-                android:layout_height="@dimen/_70sdp"
-                android:background="@drawable/ic_circle"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                app:layout_constraintBottom_toTopOf="@+id/rv_chessboard"
-                app:layout_constraintEnd_toStartOf="@id/tv_currentSquare"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimaryDark"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/tv_timer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="0"
-                    android:textColor="@color/colorOrange"
-                    android:textSize="@dimen/_24ssp"
-                    android:textStyle="bold" />
+                <ImageView
+                    android:id="@+id/iv_load"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:padding="@dimen/_10sdp"
+                    android:src="@drawable/ic_load"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/iv_save"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/colorWhite" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="bottom"
-                    android:text="s"
-                    android:textColor="@color/colorOrange"
-                    android:textSize="@dimen/_12ssp"
-                    android:textStyle="bold" />
+                <ImageView
+                    android:id="@+id/iv_save"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:padding="@dimen/_10sdp"
+                    android:src="@drawable/ic_save"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/colorWhite" />
 
-            </LinearLayout>
-
-
-            <ImageView
-                android:id="@+id/iv_restart"
-                android:layout_width="@dimen/_70sdp"
-                android:layout_height="@dimen/_70sdp"
-                android:background="@drawable/ic_circle"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:clickable="false"
-                android:gravity="center"
-                android:padding="@dimen/_25sdp"
-                android:src="@drawable/ic_restart"
-                app:layout_constraintBottom_toTopOf="@+id/rv_chessboard"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_currentSquare"
-                app:layout_constraintTop_toTopOf="parent" />
-
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_chessboard"
@@ -97,7 +69,49 @@
                 app:layout_constraintBottom_toTopOf="@id/cv_displayer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_currentSquare" />
+                app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_arrows"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5sdp"
+                app:layout_constraintBottom_toTopOf="@id/cv_displayer"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_chessboard">
+
+                <ImageView
+                    android:id="@+id/iv_arrowLeft"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="@dimen/_5sdp"
+                    android:src="@drawable/ic_left_arrow"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/iv_arrowRight"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/colorWhite" />
+
+                <ImageView
+                    android:id="@+id/iv_arrowRight"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="@dimen/_5sdp"
+                    android:src="@drawable/ic_right_arrow"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_arrowLeft"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/colorWhite" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_displayer"
@@ -110,14 +124,14 @@
                 app:layout_constraintBottom_toTopOf="@id/cv_message"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_chessboard">
+                app:layout_constraintTop_toBottomOf="@id/layout_arrows">
 
                 <TextView
                     android:id="@+id/tv_pgn"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_80sdp"
-                    android:textColor="@color/colorWhite"
-                    android:padding="@dimen/_5sdp"/>
+                    android:layout_height="@dimen/_50sdp"
+                    android:padding="@dimen/_5sdp"
+                    android:textColor="@color/colorWhite" />
 
             </androidx.cardview.widget.CardView>
 
@@ -145,49 +159,6 @@
                     android:textSize="@dimen/_14ssp" />
 
             </androidx.cardview.widget.CardView>
-
-            <FrameLayout
-                android:id="@+id/fl_start"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorOverlay">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/tv_startTimer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_10sdp"
-                        android:gravity="center"
-                        android:text=""
-                        android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/_25ssp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@id/btn_start"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                        android:id="@+id/btn_start"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_10sdp"
-                        android:backgroundTint="@color/colorYellowDark"
-                        android:gravity="center"
-                        android:text="@string/start"
-                        android:textColor="@color/colorBlack"
-                        android:theme="@style/MyMaterialTheme"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </FrameLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
