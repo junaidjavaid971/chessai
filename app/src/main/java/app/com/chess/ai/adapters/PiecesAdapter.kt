@@ -12,27 +12,22 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
-import app.com.chess.ai.adapters.PiecesAdapter.TrainingChessboardViewHolder
 import app.com.chess.ai.enums.ChessPieceEnum
 import app.com.chess.ai.interfaces.ChessBoardListener
 import app.com.chess.ai.models.global.ChessPiece
-import app.com.chess.ai.models.global.PreviouslyClickedSquare
-import app.com.chess.ai.utils.KnightSteps
 
 class PiecesAdapter(
     private val context: Context,
     val chessBoardListener: ChessBoardListener,
-    var isClickable: Boolean,
-    val previouslyClickedSquare: PreviouslyClickedSquare,
+    val isClickable: Boolean,
     val chessArray: ArrayList<ChessPiece>,
+    val targetSquare: Int,
     val movementArray: ArrayList<Int>
 ) :
-    RecyclerView.Adapter<TrainingChessboardViewHolder>() {
+    RecyclerView.Adapter<PiecesAdapter.TrainingChessboardViewHolder>() {
     private var isOrange = false
     private var count = 8
     private var alphabet = 65
-    private var previousPosition = 100
-    private var currentPosition = 100
     var arrayList: ArrayList<Int> = IntRange(0, 63).step(1).toList() as ArrayList<Int>
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -45,20 +40,30 @@ class PiecesAdapter(
 
     override fun onBindViewHolder(holder: TrainingChessboardViewHolder, position: Int) {
         bindSquares(holder, position)
-        drawPieces(holder, position)
+        if (movementArray.contains(position)) {
+            holder.ivDot.visibility = View.VISIBLE
+        }
+        if (position == targetSquare) {
+            holder.tvAlphabet.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.colorGreen
+                )
+            )
+        }
+        if (chessArray[position].position != 100)
+            drawOnePiece(holder, position)
     }
 
     private fun bindSquares(holder: TrainingChessboardViewHolder, position: Int) {
         holder.item.setOnClickListener {
-            if (isClickable) {
-                if (movementArray.contains(position)) {
-                    chessBoardListener.onChessSquareMoved(chessArray[position], position)
-                } else {
-                    chessBoardListener.onChessSquareSelectedFirstTime(
-                        chessArray[position],
-                        position
-                    )
-                }
+            if (movementArray.contains(position)) {
+                chessBoardListener.onChessSquareMoved(chessArray[position], position)
+            } else {
+                chessBoardListener.onChessSquareSelectedFirstTime(
+                    chessArray[position],
+                    position
+                )
             }
         }
         if (_AppController.showAlphabets) {
@@ -91,23 +96,6 @@ class PiecesAdapter(
                             R.color.colorOrange
                         )
                     )
-                }
-                if (position == previouslyClickedSquare.squarePosition) {
-                    if (previouslyClickedSquare.isCorrect) {
-                        holder.tvAlphabet.setBackgroundColor(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.colorGreen
-                            )
-                        )
-                    } else {
-                        holder.tvAlphabet.setBackgroundColor(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.colorRed
-                            )
-                        )
-                    }
                 }
                 return
             }
@@ -142,23 +130,6 @@ class PiecesAdapter(
                     holder.tvAlphabet.text = count.toString()
                 }
                 count--
-                if (position == previouslyClickedSquare.squarePosition) {
-                    if (previouslyClickedSquare.isCorrect) {
-                        holder.tvAlphabet.setBackgroundColor(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.colorGreen
-                            )
-                        )
-                    } else {
-                        holder.tvAlphabet.setBackgroundColor(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.colorRed
-                            )
-                        )
-                    }
-                }
                 return
             }
             if (position > 56) {
@@ -189,23 +160,6 @@ class PiecesAdapter(
                         )
                     )
                 }
-                if (position == previouslyClickedSquare.squarePosition) {
-                    if (previouslyClickedSquare.isCorrect) {
-                        holder.tvAlphabet.setBackgroundColor(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.colorGreen
-                            )
-                        )
-                    } else {
-                        holder.tvAlphabet.setBackgroundColor(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.colorRed
-                            )
-                        )
-                    }
-                }
                 return
             }
         } else {
@@ -230,164 +184,18 @@ class PiecesAdapter(
                 )
             )
         }
-        if (position == previouslyClickedSquare.squarePosition) {
-            if (previouslyClickedSquare.isCorrect) {
-                holder.tvAlphabet.setBackgroundColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.colorGreen
-                    )
-                )
-            } else {
-                holder.tvAlphabet.setBackgroundColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.colorRed
-                    )
-                )
-            }
-        }
     }
 
-    private fun drawPieces(holder: TrainingChessboardViewHolder, position: Int) {
-        if (movementArray.contains(position)) {
-            if (chessArray[position].piece == ChessPieceEnum.EMPTY.chessPiece) {
-                holder.ivDot.visibility = View.VISIBLE
-            }
-        }
-
-        if (currentPosition == position || previousPosition == position) {
-            holder.ivBorder.visibility = View.VISIBLE
-        }
-
-        val chessPiece = chessArray[position]
-        if (chessPiece.isBlack) {
-            when (chessPiece.piece) {
-                ChessPieceEnum.PAWN.chessPiece -> {
-                    holder.ivChessPiece.visibility = View.VISIBLE
-                    holder.ivChessPiece.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.ic_pawn
-                        )
-                    )
-                }
-                ChessPieceEnum.ROOK.chessPiece -> {
-                    holder.ivChessPiece.visibility = View.VISIBLE
-                    holder.ivChessPiece.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.ic_rook
-                        )
-                    )
-                }
-                ChessPieceEnum.BISHOP.chessPiece -> {
-                    holder.ivChessPiece.visibility = View.VISIBLE
-                    holder.ivChessPiece.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.ic_bishop
-                        )
-                    )
-                }
-                ChessPieceEnum.KNIGHT.chessPiece -> {
-                    holder.ivChessPiece.visibility = View.VISIBLE
-                    holder.ivChessPiece.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.ic_knight
-                        )
-                    )
-                }
-                ChessPieceEnum.QUEEN.chessPiece -> {
-                    holder.ivChessPiece.visibility = View.VISIBLE
-                    holder.ivChessPiece.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.ic_queen
-                        )
-                    )
-                }
-                ChessPieceEnum.KING.chessPiece -> {
-                    holder.ivChessPiece.visibility = View.VISIBLE
-                    holder.ivChessPiece.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.ic_king
-                        )
-                    )
-                }
-            }
-        } else {
-            when (chessPiece.piece) {
-                ChessPieceEnum.PAWN.chessPiece -> {
-                    holder.ivChessPiece.visibility = View.VISIBLE
-                    holder.ivChessPiece.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.ic_pawn_white
-                        )
-                    )
-                }
-                ChessPieceEnum.ROOK.chessPiece -> {
-                    holder.ivChessPiece.visibility = View.VISIBLE
-                    holder.ivChessPiece.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.ic_rook_white
-                        )
-                    )
-                }
-                ChessPieceEnum.BISHOP.chessPiece -> {
-                    holder.ivChessPiece.visibility = View.VISIBLE
-                    holder.ivChessPiece.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.ic_bishop_white
-                        )
-                    )
-                }
-                ChessPieceEnum.KNIGHT.chessPiece -> {
-                    holder.ivChessPiece.visibility = View.VISIBLE
-                    holder.ivChessPiece.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.ic_knight_white
-                        )
-                    )
-                }
-                ChessPieceEnum.QUEEN.chessPiece -> {
-                    holder.ivChessPiece.visibility = View.VISIBLE
-                    holder.ivChessPiece.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.ic_queen_white
-                        )
-                    )
-                }
-                ChessPieceEnum.KING.chessPiece -> {
-                    holder.ivChessPiece.visibility = View.VISIBLE
-                    holder.ivChessPiece.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.ic_king_white
-                        )
-                    )
-                }
-            }
-        }
+    private fun drawOnePiece(holder: TrainingChessboardViewHolder, position: Int) {
+        holder.ivChessPiece.visibility = View.VISIBLE
+        holder.ivChessPiece.setImageDrawable(
+            ContextCompat.getDrawable(
+                context,
+                R.drawable.ic_knight_white
+            )
+        )
     }
 
-    @JvmName("setClickable1")
-    public fun setClickable(isClickable: Boolean) {
-        this.isClickable = isClickable
-    }
-
-    @JvmName("setClickable1")
-    public fun setPreviousandCurrentIndexes(previousPosition: Int, currentPosition: Int) {
-        this.currentPosition = currentPosition
-        this.previousPosition = previousPosition
-    }
 
     override fun getItemCount(): Int {
         return chessArray.size
@@ -400,7 +208,6 @@ class PiecesAdapter(
         var tvAletter: TextView = itemView.findViewById<View>(R.id.tv_except_a_letter) as TextView
         var ivChessPiece: ImageView = itemView.findViewById<View>(R.id.fl_piece) as ImageView
         var ivDot: ImageView = itemView.findViewById<View>(R.id.fl_dot) as ImageView
-        var ivBorder: ImageView = itemView.findViewById<View>(R.id.iv_outline) as ImageView
 
     }
 }

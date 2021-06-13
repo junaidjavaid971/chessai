@@ -15,7 +15,7 @@ class _AppController : MultiDexApplication() {
         var INSTANCE: _AppController? = null
         val showAlphabets = true
         val levelsPerPage = 16
-        val timer: Long = 100000 //30000ms is 30 sec.
+        val timer: Long = 60000 //30000ms is 30 sec.
         var baseActivity: BaseActivity<ViewDataBinding>? = null
 
         fun setActivity(activity: BaseActivity<ViewDataBinding>) {

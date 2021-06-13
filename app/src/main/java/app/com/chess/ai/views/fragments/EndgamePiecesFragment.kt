@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -100,7 +101,18 @@ class EndgamePiecesFragment : Fragment(), ChessBoardListener, GamesFragment.Game
             if (fenArrayList.isEmpty() || currentFenIndex < 0) {
                 return@setOnClickListener
             } else {
-                if (currentFenIndex == 100) {
+                currentFenIndex--
+                if (currentFenIndex != 99 && currentFenIndex > fenArrayList.size) {
+                    currentFenIndex = fenArrayList.size - 1
+                }
+                if (currentFenIndex == fenArrayList.size) {
+                    currentFenIndex--
+                }
+                if (currentFenIndex < 0) {
+                    currentFenIndex = 0
+                    return@setOnClickListener
+                }
+                if (currentFenIndex == 99) {
                     currentFenIndex = fenArrayList.size - 1
                     board.loadFromFen(fenArrayList[currentFenIndex])
                     piecesAdapter.setPreviousandCurrentIndexes(
@@ -127,7 +139,11 @@ class EndgamePiecesFragment : Fragment(), ChessBoardListener, GamesFragment.Game
             if (fenArrayList.isEmpty() || currentFenIndex < 0) {
                 return@setOnClickListener
             } else {
-                if (currentFenIndex == 100) {
+                currentFenIndex++
+                if (currentFenIndex != 100 && currentFenIndex != 101 && currentFenIndex > fenArrayList.size) {
+                    currentFenIndex = fenArrayList.size - 1
+                }
+                if (currentFenIndex == 100 || currentFenIndex == 101) {
                     currentFenIndex = fenArrayList.size - 1
                     board.loadFromFen(fenArrayList[currentFenIndex])
                     piecesAdapter.setPreviousandCurrentIndexes(
@@ -207,6 +223,11 @@ class EndgamePiecesFragment : Fragment(), ChessBoardListener, GamesFragment.Game
             if (board.isMoveLegal(move, false)) {
 
                 board.doMove(move)
+                /*if (board.isAttackedBy(move)) {
+                    Log.d("AttackStatus", "Attacked - Black")
+                } else {
+                    Log.d("AttackStatus", "Not Attacked - Black")
+                }*/
                 fenArrayList.add(board.fen)
 
                 val pgnObj = pgnArraylist[moveCount]
@@ -233,6 +254,11 @@ class EndgamePiecesFragment : Fragment(), ChessBoardListener, GamesFragment.Game
             if (board.isMoveLegal(move, false)) {
 
                 board.doMove(move)
+                /*if (board.isAttackedBy(move)) {
+                    Log.d("AttackStatus", "Attacked - White")
+                } else {
+                    Log.d("AttackStatus", "Not Attacked - White")
+                }*/
                 fenArrayList.add(board.fen)
 
                 val pgn = PGN()
@@ -355,12 +381,10 @@ class EndgamePiecesFragment : Fragment(), ChessBoardListener, GamesFragment.Game
                 positionsArrayList[currentFenIndex].currentPosition
             )
             if (!isLeftKey) {
-                currentFenIndex--
                 if (currentFenIndex < 0) {
                     currentFenIndex = 0
                 }
             } else {
-                currentFenIndex++
                 if (currentFenIndex == positionsArrayList.size) {
                     currentFenIndex--
                 }

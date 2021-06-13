@@ -20,7 +20,7 @@ class TrainingChessboardSquaresAdapter(
     val previouslyClickedSquare: PreviouslyClickedSquare
 ) :
     RecyclerView.Adapter<TrainingChessboardSquaresAdapter.TrainingChessboardViewHolder>() {
-    private var isOrange = false
+    private var isOrange = true
     private var count = 8
     private var alphabet = 65
     override fun onCreateViewHolder(

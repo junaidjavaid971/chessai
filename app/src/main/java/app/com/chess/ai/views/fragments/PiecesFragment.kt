@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,21 +12,18 @@ import android.view.Window
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ItemTouchHelper.*
-import androidx.recyclerview.widget.RecyclerView
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
 import app.com.chess.ai.adapters.DisplayerAdapter
-import app.com.chess.ai.adapters.PiecesAdapter
+import app.com.chess.ai.adapters.TrainingPiecesAdapter
 import app.com.chess.ai.databinding.FragmentTrainingChessboardBinding
 import app.com.chess.ai.databinding.ProgressDialogRowBinding
 import app.com.chess.ai.enums.ChessPieceEnum
 import app.com.chess.ai.interfaces.ChessBoardListener
 import app.com.chess.ai.models.global.ChessPiece
 import app.com.chess.ai.models.global.Displayer
-import app.com.chess.ai.models.global.PreviouslyClickedSquare
 import app.com.chess.ai.utils.ChessMovements
+import app.com.chess.ai.utils.KnightSteps
 import app.com.chess.ai.utils.SharePrefData
 import app.com.chess.ai.views.activities.BaseActivity
 import java.util.*
@@ -37,14 +35,16 @@ import kotlin.collections.HashMap
 class PiecesFragment : Fragment(), ChessBoardListener {
 
     //Global Variables
-    var currentSquare: Int = 0
+    var targetPosition: Int = 0
     var hits = ""
     var missed = ""
     var score = 0
     var isClickable = false
     var clickedTime: Long = 0
     var longestDuration: Long = 0
-    var currentPosition = 0;
+    var currentPosition = 100
+    var noOfStepsRequired = 0
+    var noOfStepsTaken = 0
 
     //Arrays
     var chessboardSquares = HashMap<Int, String>()
@@ -54,8 +54,7 @@ class PiecesFragment : Fragment(), ChessBoardListener {
     //Objects
     lateinit var binding: FragmentTrainingChessboardBinding
     var baseActivity: BaseActivity<FragmentTrainingChessboardBinding>? = null
-    lateinit var piecesAdapter: PiecesAdapter
-    var previouslyClickedSquare = PreviouslyClickedSquare()
+    lateinit var TrainingPiecesAdapter: TrainingPiecesAdapter
     lateinit var countDownTimer: CountDownTimer
 
 
@@ -75,9 +74,11 @@ class PiecesFragment : Fragment(), ChessBoardListener {
 
         baseActivity = activity as BaseActivity<FragmentTrainingChessboardBinding>?
         clickedTime = System.currentTimeMillis()
+        currentPosition = Random().nextInt(63)
         initChessboardSquares()
         initDisplayerAdapter()
         updateCurrentSquare()
+        bindBoardRecyclerView()
 
         binding.btnStart.setOnClickListener {
             startTraining()
@@ -99,7 +100,6 @@ class PiecesFragment : Fragment(), ChessBoardListener {
 
             override fun onFinish() {
                 isClickable = true
-                bindBoardRecyclerView()
                 binding.flStart.visibility = View.GONE
                 startTimer()
             }
@@ -139,31 +139,47 @@ class PiecesFragment : Fragment(), ChessBoardListener {
         }
 
         binding.rvChessboard.layoutManager = GridLayoutManager(requireActivity(), 8)
-        piecesAdapter =
-            PiecesAdapter(
+        TrainingPiecesAdapter =
+            TrainingPiecesAdapter(
                 requireActivity(),
                 this,
                 isClickable,
-                previouslyClickedSquare,
                 chessBoardArrayList,
+                targetPosition,
                 movementList
             )
-        binding.rvChessboard.adapter = piecesAdapter
+        binding.rvChessboard.adapter = TrainingPiecesAdapter
     }
 
     override fun onChessSquareMoved(chessPiece: ChessPiece, position: Int) {
         Collections.swap(chessBoardArrayList, position, currentPosition)
-
-        piecesAdapter =
-            PiecesAdapter(
+        if (position == targetPosition) {
+            /*chessBoardArrayList[currentPosition].position = currentPosition
+            chessBoardArrayList[position].position = currentPosition*/
+            noOfStepsTaken++
+            if (noOfStepsTaken <= noOfStepsRequired) {
+                arrayList.add(Displayer("", true))
+                binding.tvMessage.text = "Good Job!"
+            } else {
+                arrayList.add(Displayer("", false))
+                binding.tvMessage.text = "You could have reach there in $noOfStepsRequired steps."
+            }
+            noOfStepsTaken = 0
+            initDisplayerAdapter()
+            updateCurrentSquare()
+        } else {
+            noOfStepsTaken++
+        }
+        TrainingPiecesAdapter =
+            TrainingPiecesAdapter(
                 requireActivity(),
                 this,
                 isClickable,
-                previouslyClickedSquare,
                 chessBoardArrayList,
+                targetPosition,
                 ArrayList()
             )
-        binding.rvChessboard.adapter = piecesAdapter
+        binding.rvChessboard.adapter = TrainingPiecesAdapter
     }
 
     private fun initChessboardSquares() {
@@ -181,16 +197,7 @@ class PiecesFragment : Fragment(), ChessBoardListener {
             @SuppressLint("SetTextI18n")
 
             override fun onTick(millisUntilFinished: Long) {
-                binding.tvTimer.text = "" + String.format(
-                    "%02d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
-                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                            TimeUnit.MINUTES.toSeconds(
-                                TimeUnit.MILLISECONDS.toMinutes(
-                                    millisUntilFinished
-                                )
-                            )
-                )
+                binding.tvTimer.text = (millisUntilFinished / 1000).toString()
             }
 
             override fun onFinish() {
@@ -210,82 +217,49 @@ class PiecesFragment : Fragment(), ChessBoardListener {
 
     private fun bindBoardRecyclerView() {
         getChessArray()
+        targetPosition = Random().nextInt(chessBoardArrayList.size)
+        while (targetPosition == currentPosition) {
+            targetPosition = Random().nextInt(chessBoardArrayList.size)
+        }
+        val pieceCoordinates = findCoordinates(currentPosition)
+        val targetCoordinates = findCoordinates(targetPosition)
+        val knightSteps = KnightSteps()
+        noOfStepsRequired = knightSteps.getNumberOfSteps(
+            pieceCoordinates[0],
+            pieceCoordinates[1],
+            targetCoordinates[0],
+            targetCoordinates[1]
+        )
+        Log.d("StepsReq", noOfStepsRequired.toString())
         binding.rvChessboard.layoutManager = GridLayoutManager(requireActivity(), 8)
-        piecesAdapter =
-            PiecesAdapter(
+        TrainingPiecesAdapter =
+            TrainingPiecesAdapter(
                 requireActivity(),
                 this,
                 isClickable,
-                previouslyClickedSquare,
                 chessBoardArrayList,
+                targetPosition,
                 ArrayList()
             )
-        binding.rvChessboard.adapter = piecesAdapter
+        binding.rvChessboard.adapter = TrainingPiecesAdapter
     }
 
     private fun updateCurrentSquare() {
-        currentSquare = Random().nextInt(63 - 0 + 1) + 0
-        binding.tvCurrentSquare.text = chessboardSquares[currentSquare]
-        bindBoardRecyclerView()
+        targetPosition = Random().nextInt(63 - 0 + 1) + 0
+        binding.tvCurrentSquare.text = chessboardSquares[targetPosition]
+        binding.tvMessage.text =
+            "Find all the possible ways to reach " + chessboardSquares[targetPosition] + ". Use the shortest path"
     }
 
     private fun getChessArray() {
         chessBoardArrayList.clear()
         for (i in 0 until 64) {
-            when (i) {
-                0, 7 -> {
-                    val chessPiece = ChessPiece(i, true, ChessPieceEnum.ROOK.chessPiece)
-                    chessBoardArrayList.add(chessPiece)
-                }
-                1, 6 -> {
-                    val chessPiece = ChessPiece(i, true, ChessPieceEnum.KNIGHT.chessPiece)
-                    chessBoardArrayList.add(chessPiece)
-                }
-                2, 5 -> {
-                    val chessPiece = ChessPiece(i, true, ChessPieceEnum.BISHOP.chessPiece)
-                    chessBoardArrayList.add(chessPiece)
-                }
-                3 -> {
-                    val chessPiece = ChessPiece(i, true, ChessPieceEnum.QUEEN.chessPiece)
-                    chessBoardArrayList.add(chessPiece)
-                }
-                4 -> {
-                    val chessPiece = ChessPiece(i, true, ChessPieceEnum.KING.chessPiece)
-                    chessBoardArrayList.add(chessPiece)
-                }
-                56, 63 -> {
-                    val chessPiece = ChessPiece(i, false, ChessPieceEnum.ROOK.chessPiece)
-                    chessBoardArrayList.add(chessPiece)
-                }
-                57, 62 -> {
-                    val chessPiece = ChessPiece(i, false, ChessPieceEnum.KNIGHT.chessPiece)
-                    chessBoardArrayList.add(chessPiece)
-                }
-                58, 61 -> {
-                    val chessPiece = ChessPiece(i, false, ChessPieceEnum.BISHOP.chessPiece)
-                    chessBoardArrayList.add(chessPiece)
-                }
-                59 -> {
-                    val chessPiece = ChessPiece(i, false, ChessPieceEnum.QUEEN.chessPiece)
-                    chessBoardArrayList.add(chessPiece)
-                }
-                60 -> {
-                    val chessPiece = ChessPiece(i, false, ChessPieceEnum.KING.chessPiece)
-                    chessBoardArrayList.add(chessPiece)
-                }
-                in 8..15 -> {
-                    val chessPiece = ChessPiece(i, true, ChessPieceEnum.PAWN.chessPiece)
-                    chessBoardArrayList.add(chessPiece)
-                }
-                in 48..55 -> {
-                    val chessPiece = ChessPiece(i, false, ChessPieceEnum.PAWN.chessPiece)
-                    chessBoardArrayList.add(chessPiece)
-                }
-                else -> {
-                    val chessPiece = ChessPiece(i, false, ChessPieceEnum.EMPTY.chessPiece)
-                    chessBoardArrayList.add(chessPiece)
-                }
+            val chessPiece = ChessPiece(100, false, ChessPieceEnum.EMPTY.chessPiece)
+            if (i == currentPosition) {
+                chessPiece.position = i
+                chessPiece.piece = ChessPieceEnum.KNIGHT.chessPiece
             }
+            chessBoardArrayList.add(chessPiece)
         }
     }
 
@@ -326,8 +300,7 @@ class PiecesFragment : Fragment(), ChessBoardListener {
         score = 0
         isClickable = false
         longestDuration = 0
-        previouslyClickedSquare = PreviouslyClickedSquare()
-        currentSquare = 0
+        targetPosition = 0
         binding.ivRestart.isClickable = true
         binding.tvCurrentSquare.text = "--"
         if (countDownTimer != null) {
@@ -337,6 +310,7 @@ class PiecesFragment : Fragment(), ChessBoardListener {
         clickedTime = System.currentTimeMillis()
         initChessboardSquares()
         updateCurrentSquare()
+        bindBoardRecyclerView()
     }
 
     private fun restartGame() {
@@ -348,64 +322,40 @@ class PiecesFragment : Fragment(), ChessBoardListener {
         initChessboardSquares()
         initDisplayerAdapter()
         updateCurrentSquare()
+        bindBoardRecyclerView()
         startTraining()
     }
 
-    private fun setObservers() {
-        val oldPos = IntArray(1)
-        val newPos = IntArray(1)
-
-        val simpleItemTouchCallback =
-            object : ItemTouchHelper.SimpleCallback(
-                // [1] The allowed directions for moving (drag-and-drop) items
-                UP or DOWN or START or END,
-                // [2] The allowed directions for swiping items
-                0
-            ) {
-                override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ): Boolean {
-                    // [3] Do something when an item is moved
-
-                    val adapter = recyclerView.adapter
-                    oldPos[0] = viewHolder.adapterPosition
-                    newPos[0] = target.adapterPosition
-
-                    // [4] Keep up-to-date the underlying data set
-                    Collections.swap(piecesAdapter.arrayList, oldPos[0], newPos[0])
-                    // [5] Tell the adapter to switch the 2 items
-                    adapter?.notifyItemMoved(oldPos[0], newPos[0])
-
-                    return true
-                }
-
-                override fun onSwiped(
-                    viewHolder: RecyclerView.ViewHolder,
-                    direction: Int
-                ) {
-                    // [6] Do something when an item is swiped
-                }
-
-                override fun clearView(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder
-                ) {
-                    super.clearView(recyclerView, viewHolder);
-                    moveItem(oldPos[0], newPos[0])
-                }
+    private fun findCoordinates(position: Int): Array<Int> {
+        var xFound = false
+        var yFound = false
+        var x = 0
+        var y = 0
+        var initXPos = position
+        var initYPos = 0
+        while (!xFound) {
+            if ((initXPos % 8) == 0) {
+                x++
+                xFound = true
+                initYPos = initXPos
+            } else {
+                x++
+                initXPos--
             }
-        ItemTouchHelper(simpleItemTouchCallback).attachToRecyclerView(binding.rvChessboard)
-
+        }
+        if (initYPos == 56) {
+            y++
+            yFound = true
+        }
+        while (!yFound) {
+            initYPos += 8
+            if (initYPos == 56) {
+                y++
+                yFound = true
+            }
+            y++
+        }
+        return arrayOf(x, y);
     }
 
-    private fun moveItem(oldPos: Int, newPos: Int) {
-        val temp: Int = piecesAdapter.arrayList.get(oldPos)
-        piecesAdapter.arrayList[oldPos] =
-            piecesAdapter.arrayList[newPos]
-        piecesAdapter.arrayList[newPos] = temp
-        piecesAdapter.notifyItemChanged(oldPos)
-        piecesAdapter.notifyItemChanged(newPos)
-    }
 }

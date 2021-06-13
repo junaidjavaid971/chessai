@@ -27,7 +27,7 @@ class EndgamePiecesAdapter(
     val movementArray: ArrayList<Int>
 ) :
     RecyclerView.Adapter<EndgamePiecesAdapter.TrainingChessboardViewHolder>() {
-    private var isOrange = false
+    private var isOrange = true
     private var count = 8
     private var alphabet = 65
     private var previousPosition = 100
@@ -64,7 +64,6 @@ class EndgamePiecesAdapter(
                 holder.tvAlphabet.visibility = View.VISIBLE
                 holder.tvAlphabet.text = count.toString()
                 holder.tvAletter.text = "A"
-                //alphabet.toChar().toString()
                 alphabet++
                 if (isOrange) {
                     isOrange = !isOrange

@@ -15,12 +15,16 @@ public class ChessMovements {
         ArrayList<Integer> movementList = new ArrayList<>();
         position = position - 8;
         movementList.add(position);
+        position = position - 8;
+        movementList.add(position);
 
         return movementList;
     }
 
     public ArrayList<Integer> getBlackPawnMovement(int position) {
         ArrayList<Integer> movementList = new ArrayList<>();
+        position = position + 8;
+        movementList.add(position);
         position = position + 8;
         movementList.add(position);
 
@@ -79,12 +83,14 @@ public class ChessMovements {
         if (bottom <= 63 && chessPieceArrayList.get(bottom).piece == ChessPieceEnum.EMPTY.getChessPiece() && !stopBottom) {
             movementList.add(bottom);
         } else {
+            movementList.add(bottom);
             stopBottom = true;
         }
         int top = position - 8;
         if (top > 0 && chessPieceArrayList.get(top).piece == ChessPieceEnum.EMPTY.getChessPiece() && !stopTop) {
             movementList.add(top);
         } else {
+            movementList.add(top);
             stopTop = true;
         }
         int left = 0;
@@ -94,6 +100,7 @@ public class ChessMovements {
             if (chessPieceArrayList.get(left).piece == ChessPieceEnum.EMPTY.getChessPiece() && !stopLeft) {
                 movementList.add(left);
             } else {
+                movementList.add(left);
                 stopLeft = true;
             }
         }
@@ -102,6 +109,7 @@ public class ChessMovements {
             if (chessPieceArrayList.get(right).piece == ChessPieceEnum.EMPTY.getChessPiece() && !stopRight) {
                 movementList.add(right);
             } else {
+                movementList.add(right);
                 stopRight = true;
             }
         }
@@ -167,6 +175,7 @@ public class ChessMovements {
                     if (chessPieceArrayList.get(lb) != null && chessPieceArrayList.get(lb).piece == ChessPieceEnum.EMPTY.getChessPiece()) {
                         movementList.add(lb);
                     } else {
+                        movementList.add(lb);
                         stopLB = true;
                     }
                 } else {
@@ -180,6 +189,7 @@ public class ChessMovements {
                     if (chessPieceArrayList.get(lt) != null && chessPieceArrayList.get(lt).piece == ChessPieceEnum.EMPTY.getChessPiece()) {
                         movementList.add(lt);
                     } else {
+                        movementList.add(lt);
                         stopLT = true;
                     }
                 } else {
@@ -193,6 +203,7 @@ public class ChessMovements {
                     if (chessPieceArrayList.get(rt) != null && chessPieceArrayList.get(rt).piece == ChessPieceEnum.EMPTY.getChessPiece()) {
                         movementList.add(rt);
                     } else {
+                        movementList.add(rt);
                         stopRT = true;
                     }
                 } else {
@@ -206,6 +217,7 @@ public class ChessMovements {
                     if (chessPieceArrayList.get(rb) != null && chessPieceArrayList.get(rb).piece == ChessPieceEnum.EMPTY.getChessPiece()) {
                         movementList.add(rb);
                     } else {
+                        movementList.add(rb);
                         stopRB = true;
                     }
                 } else {
@@ -222,6 +234,7 @@ public class ChessMovements {
                         if (chessPieceArrayList.get(lb) != null && chessPieceArrayList.get(lb).piece == ChessPieceEnum.EMPTY.getChessPiece()) {
                             movementList.add(lb);
                         } else {
+                            movementList.add(lb);
                             stopLB = true;
                         }
                     } else {
@@ -236,6 +249,7 @@ public class ChessMovements {
                         if (chessPieceArrayList.get(lt) != null && chessPieceArrayList.get(lt).piece == ChessPieceEnum.EMPTY.getChessPiece()) {
                             movementList.add(lt);
                         } else {
+                            movementList.add(lt);
                             stopLT = true;
                         }
                     }
@@ -250,6 +264,7 @@ public class ChessMovements {
                         if (chessPieceArrayList.get(rt) != null && chessPieceArrayList.get(rt).piece == ChessPieceEnum.EMPTY.getChessPiece()) {
                             movementList.add(rt);
                         } else {
+                            movementList.add(rt);
                             stopRT = true;
                         }
                     }
@@ -264,6 +279,7 @@ public class ChessMovements {
                         if (chessPieceArrayList.get(rb) != null && chessPieceArrayList.get(rb).piece == ChessPieceEnum.EMPTY.getChessPiece()) {
                             movementList.add(rb);
                         } else {
+                            movementList.add(rb);
                             stopRB = true;
                         }
                     }

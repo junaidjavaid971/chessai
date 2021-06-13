@@ -13,8 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
-import app.com.chess.ai.adapters.DisplayerAdapter
 import app.com.chess.ai.adapters.LevelChessboardAdapter
+import app.com.chess.ai.adapters.SquaresDisplayerAdapter
 import app.com.chess.ai.databinding.FragmentTrainingChessboardBinding
 import app.com.chess.ai.databinding.ProgressDialogRowBinding
 import app.com.chess.ai.interfaces.ChessBoardListener
@@ -173,7 +173,7 @@ class FragmentLevelChessboard(val level: Int) : Fragment(), ChessBoardListener {
     private fun initDisplayerAdapter() {
         binding.rvDisplayer.layoutManager =
             GridLayoutManager(requireActivity(), 6)
-        val adapter = DisplayerAdapter(arrayList)
+        val adapter = SquaresDisplayerAdapter(arrayList)
         binding.rvDisplayer.adapter = adapter
     }
 
