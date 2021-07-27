@@ -61,9 +61,9 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
+            <app.com.chess.ai.test.ChessView
                 android:id="@+id/rv_chessboard"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_5sdp"
                 app:layout_constraintBottom_toTopOf="@id/cv_displayer"
@@ -119,6 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_30sdp"
                 android:layout_marginEnd="@dimen/_30sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
                 app:cardBackgroundColor="@color/colorPrimaryDark"
                 app:cardCornerRadius="@dimen/_10sdp"
                 app:layout_constraintBottom_toTopOf="@id/cv_message"
