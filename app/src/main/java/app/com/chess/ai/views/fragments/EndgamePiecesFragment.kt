@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,12 +39,13 @@ class EndgamePiecesFragment : Fragment(), ChessBoardListener, GamesFragment.Game
 
     //Global Variables
     var isClickable = false
+    var isFirstTime = true
     var clickedTime: Long = 0
     var previousPosition = 100
     var currentFenIndex = 100
     var pgn = "1. "
     var moveCount = 0
-    var fen = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr w KQkq - 0 1"
+    var fen = "PPPPPPPP/RNBQKBNR/8/8/8/8/rnbqkbnr/pppppppp w KQkq - 0 1"
     var isFenLoaded = false
 
     //Arrays
@@ -181,7 +181,7 @@ class EndgamePiecesFragment : Fragment(), ChessBoardListener, GamesFragment.Game
         var movementList: ArrayList<Int> = ArrayList()
         val chessMovements = ChessMovements()
 
-        this.previousPosition = position
+        this.previousPosition = chessPiece.position
 
         if (chessPiece.piece == ChessPieceEnum.PAWN.chessPiece) {
             if (chessPiece.isBlack) {
@@ -218,16 +218,12 @@ class EndgamePiecesFragment : Fragment(), ChessBoardListener, GamesFragment.Game
         positionsArrayList.add(positions)
         if (board.sideToMove.name == "BLACK") {
             val ms =
-                chessboardSquares[previousPosition]?.toLowerCase() + "" + chessboardSquares[position]?.toLowerCase()
+                chessboardSquares[previousPosition]?.toLowerCase() + "" + chessboardSquares[chessPiece.position]?.toLowerCase()
             move = Move(ms, Side.BLACK)
             if (board.isMoveLegal(move, false)) {
 
                 board.doMove(move)
-                /*if (board.isAttackedBy(move)) {
-                    Log.d("AttackStatus", "Attacked - Black")
-                } else {
-                    Log.d("AttackStatus", "Not Attacked - Black")
-                }*/
+
                 fenArrayList.add(board.fen)
 
                 val pgnObj = pgnArraylist[moveCount]
@@ -254,11 +250,6 @@ class EndgamePiecesFragment : Fragment(), ChessBoardListener, GamesFragment.Game
             if (board.isMoveLegal(move, false)) {
 
                 board.doMove(move)
-                /*if (board.isAttackedBy(move)) {
-                    Log.d("AttackStatus", "Attacked - White")
-                } else {
-                    Log.d("AttackStatus", "Not Attacked - White")
-                }*/
                 fenArrayList.add(board.fen)
 
                 val pgn = PGN()
@@ -400,11 +391,7 @@ class EndgamePiecesFragment : Fragment(), ChessBoardListener, GamesFragment.Game
                 ChessPiece(n, false, ChessPieceEnum.EMPTY.chessPiece, Square.squareAt(n))
             chessBoardArrayList.add(chessPiece)
         }
-        if (!isFenLoaded) {
-            board.loadFromFen(fen)
-            isFenLoaded = true
-        } else
-            board.loadFromFen(board.fen)
+        board.loadFromFen(board.fen)
 
         val blackBishopSquares: List<Square> =
             board.getPieceLocation(Piece.BLACK_BISHOP)
@@ -517,6 +504,30 @@ class EndgamePiecesFragment : Fragment(), ChessBoardListener, GamesFragment.Game
             )
             chessBoardArrayList[sqare.ordinal] = chessPiece
         }
+        reverseArray(chessBoardArrayList)
+    }
+
+    private fun reverseArray(chessPiecesList: ArrayList<ChessPiece>) {
+//        chessPiecesList.reverse()
+        var arrayList = ArrayList<ChessPiece>()
+        for (n in 0..63) {
+            val chessPiece =
+                ChessPiece(n, false, ChessPieceEnum.EMPTY.chessPiece, Square.squareAt(n))
+            arrayList.add(chessPiece)
+        }
+        for (i in 0 until chessPiecesList.size) {
+            val pos = chessPiecesList[i].position
+            var temp = chessPiecesList[i].position
+            temp -= 7
+            if (temp < 0)
+                temp *= (-1)
+
+            arrayList[i].square = chessBoardArrayList[63 - temp].square
+            arrayList[i].piece = chessBoardArrayList[63 - temp].piece
+            arrayList[i].isBlack = chessBoardArrayList[63 - temp].isBlack
+            arrayList[i].position = i
+        }
+        chessBoardArrayList = arrayList
     }
 
     inner class GetAllGames : AsyncTask<Void?, Void?, List<Games>>() {
