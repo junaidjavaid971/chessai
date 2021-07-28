@@ -1,6 +1,7 @@
 package app.com.chess.ai.views.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate {
 
     var chessModel = ChessModel()
     lateinit var chessView: ChessView
+    private val TAG = "EndgameFragment"
     var baseActivity: BaseActivity<FragmentEndgameBinding>? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +42,11 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate {
 
     override fun movePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
         chessModel.movePiece(fromCol, fromRow, toCol, toRow)
+        Log.d(TAG, "from ($fromCol , $fromRow) to (${toCol} , ${toCol})")
         chessView.invalidate()
+    }
+
+    override fun showToast(string: String) {
+        baseActivity?.showToast(string)
     }
 }

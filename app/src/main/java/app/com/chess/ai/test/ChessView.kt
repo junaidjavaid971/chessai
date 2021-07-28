@@ -83,14 +83,17 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
                     Log.d(MTAG, "FEN After: " + chessModel.board.fen)
                 } else {
                     val origin = chessModel.pieceAt(col, row)
+                    if (origin?.player == ChessPlayer.EMPTY) return true
                     if (((chessModel.sideToMove() == Side.WHITE) && (origin?.player == ChessPlayer.WHITE)) ||
                         ((chessModel.sideToMove() == Side.BLACK) && (origin?.player == ChessPlayer.BLACK))
                     ) {
-                        fromCol = col
-                        fromRow = row
                         chessModel.possibleMovements(origin)
+                        if (chessModel.possibleMovements.isNotEmpty()) {
+                            fromCol = col
+                            fromRow = row
+                        }
                     } else {
-                        Log.d(MTAG, "Opposite Side's Movement.")
+                        chessDelegate?.showToast("Opposite side's turn to make a move.")
                     }
                 }
                 movingPiece = null
