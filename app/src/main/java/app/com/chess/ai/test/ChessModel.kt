@@ -9,7 +9,13 @@ import com.github.bhlangonijr.chesslib.Square
 import com.github.bhlangonijr.chesslib.move.Move
 
 class ChessModel {
-    var piecesBox = mutableSetOf<ChessPiece>()
+    constructor(chessPieceListener: ChessPieceListener) {
+        this.chessPieceListener = chessPieceListener
+    }
+
+    constructor()
+
+    var piecesBox = ArrayList<ChessPiece>()
     var rowColBinding = hashMapOf<RowCol, Int>()
     var possibleMovements = ArrayList<RowCol>()
     private val TAG = "MainActivityTAG"
@@ -28,7 +34,10 @@ class ChessModel {
     var whiteQueenSquares: List<Square>? = null
     var blackQueenSquares: List<Square>? = null
     lateinit var board: Board
+    var chessPieceListener: ChessPieceListener? = null
     var origin: ChessPiece? = null
+    private var fromCol: Int = -1
+    private var fromRow: Int = -1
 
     init {
         initRowColBinding()
@@ -44,6 +53,8 @@ class ChessModel {
             for (col in 0..7) {
                 rowColBinding[RowCol(row, col)] = count
                 count++
+
+                Log.d("ROWCOL", "Row: " + row + " - Col: " + col + " - Index: " + count)
             }
         }
     }
@@ -98,10 +109,34 @@ class ChessModel {
         }
     }
 
-    fun makeMove(destination: ChessPiece?) {
-        val move = Move(origin?.square, destination?.square)
-        board.doMove(move)
-        Log.d(MTAG, board.fen.toString())
+    fun makeMove(col: Int, row: Int) {
+        if (possibleMovements.contains(RowCol(row, col)) == true) {
+            Log.d(MTAG, "FEN Before: " + board.fen)
+            val destination = pieceAt(col, row)
+            val move = Move(origin?.square, destination?.square)
+            if (board.isMoveLegal(move, false)) {
+                possibleMovements.clear()
+                board.doMove(move)
+            }
+            Log.d(MTAG, board.fen.toString())
+            chessPieceListener?.chessPieceClicked(fromCol, fromRow, col, row)
+            movePiece(fromCol, fromRow, col, row);
+            Log.d(MTAG, "FEN After: " + board.fen)
+        } else {
+            val temp = pieceAt(col, row)
+            if (temp?.player == ChessPlayer.EMPTY) return
+            if (((sideToMove() == Side.WHITE) && (temp?.player == ChessPlayer.WHITE)) ||
+                ((sideToMove() == Side.BLACK) && (temp?.player == ChessPlayer.BLACK))
+            ) {
+                possibleMovements(temp)
+                if (possibleMovements.isNotEmpty()) {
+                    fromCol = col
+                    fromRow = row
+                }
+            } else {
+                chessPieceListener?.showToast("Opponent's turn")
+            }
+        }
     }
 
     fun sideToMove(): Side? {
@@ -111,8 +146,8 @@ class ChessModel {
     fun movePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
         if (fromCol == toCol && fromRow == toRow) return
         val movingPiece = pieceAt(fromCol, fromRow) ?: return
-
-        pieceAt(toCol, toRow)?.let {
+        val piece = pieceAt(toCol, toRow)
+        piece?.let {
             if (it.player == movingPiece.player) {
                 return
             }
@@ -124,7 +159,7 @@ class ChessModel {
                 toCol,
                 toRow,
                 movingPiece.player,
-                movingPiece.square,
+                piece?.square!!,
                 movingPiece.rank,
                 movingPiece.resId
             )
@@ -323,13 +358,5 @@ class ChessModel {
         }
         desc += "  0 1 2 3 4 5 6 7"
         return desc
-    }
-
-    fun returnPossibleMovements(): ArrayList<RowCol> {
-        if (possibleMovements.isEmpty()) {
-            return ArrayList()
-        } else {
-            return possibleMovements
-        }
     }
 }

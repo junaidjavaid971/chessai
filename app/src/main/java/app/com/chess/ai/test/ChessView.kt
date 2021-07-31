@@ -11,15 +11,13 @@ import app.com.chess.ai.R
 import com.github.bhlangonijr.chesslib.Side
 import kotlin.math.min
 
-class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
+class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), ChessPieceListener {
     private var originX = 20f
     private var originY = 200f
     private var cellSide = 130f
     private val TAG = "MainActivityTAG"
     private val MTAG = "MovementTAG"
     private var movingPiece: ChessPiece? = null
-    private var fromCol: Int = -1
-    private var fromRow: Int = -1
     private val scaleFactor = .9f
     private val paint = Paint()
     private var movingPieceBitmap: Bitmap? = null
@@ -45,10 +43,11 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     var chessDelegate: ChessDelegate? = null
     private var movingPieceX = -1f
     private var movingPieceY = -1f
-    private var chessModel = ChessModel()
+    private var chessModel: ChessModel? = null
 
     init {
         loadBitmaps()
+        chessModel = ChessModel(this)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -74,30 +73,7 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
             MotionEvent.ACTION_UP -> {
                 val col = ((event.x - originX) / cellSide).toInt()
                 val row = 7 - ((event.y - originY) / cellSide).toInt()
-                Log.d(TAG, "from ($fromCol , $fromRow) to (${col} , ${row})")
-                if (chessModel.possibleMovements.contains(RowCol(row, col)) == true) {
-                    Log.d(MTAG, "FEN Before: " + chessModel.board.fen)
-                    val destination = chessModel.pieceAt(col, row)
-                    chessModel.makeMove(destination)
-                    chessDelegate?.movePiece(fromCol, fromRow, col, row)
-                    Log.d(MTAG, "FEN After: " + chessModel.board.fen)
-                } else {
-                    val origin = chessModel.pieceAt(col, row)
-                    if (origin?.player == ChessPlayer.EMPTY) return true
-                    if (((chessModel.sideToMove() == Side.WHITE) && (origin?.player == ChessPlayer.WHITE)) ||
-                        ((chessModel.sideToMove() == Side.BLACK) && (origin?.player == ChessPlayer.BLACK))
-                    ) {
-                        chessModel.possibleMovements(origin)
-                        if (chessModel.possibleMovements.isNotEmpty()) {
-                            fromCol = col
-                            fromRow = row
-                        }
-                    } else {
-                        chessDelegate?.showToast("Opposite side's turn to make a move.")
-                    }
-                }
-                movingPiece = null
-                movingPieceBitmap = null
+                chessModel?.makeMove(col, row)
             }
         }
         invalidate()
@@ -177,5 +153,15 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
             originY + (row + 1) * cellSide,
             paint
         )
+    }
+
+    override fun chessPieceClicked(fromCol: Int, fromRow: Int, col: Int, row: Int) {
+        chessDelegate?.movePiece(fromCol, fromRow, col, row)
+        movingPiece = null
+        movingPieceBitmap = null
+    }
+
+    override fun showToast(message: String) {
+        chessDelegate?.showToast(message)
     }
 }
