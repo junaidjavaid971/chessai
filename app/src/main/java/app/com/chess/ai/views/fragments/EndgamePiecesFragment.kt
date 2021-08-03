@@ -49,4 +49,8 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate {
     override fun showToast(string: String) {
         baseActivity?.showToast(string)
     }
+
+    override fun drawPiece() {
+        chessView.invalidate()
+    }
 }

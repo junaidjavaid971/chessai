@@ -7,6 +7,7 @@ import com.github.bhlangonijr.chesslib.Piece
 import com.github.bhlangonijr.chesslib.Side
 import com.github.bhlangonijr.chesslib.Square
 import com.github.bhlangonijr.chesslib.move.Move
+import java.lang.Exception
 
 class ChessModel {
     constructor(chessPieceListener: ChessPieceListener) {
@@ -43,7 +44,6 @@ class ChessModel {
         initRowColBinding()
         initBoard()
         reset()
-        movePiece(0, 0, 0, 1)
         Log.d(TAG, toString())
     }
 
@@ -58,6 +58,7 @@ class ChessModel {
             }
         }
     }
+
 
     private fun initBoard() {
         board = Board()
@@ -114,13 +115,16 @@ class ChessModel {
             Log.d(MTAG, "FEN Before: " + board.fen)
             val destination = pieceAt(col, row)
             val move = Move(origin?.square, destination?.square)
-            if (board.isMoveLegal(move, false)) {
+            if (board.isMoveLegal(move, true)) {
                 possibleMovements.clear()
-                board.doMove(move)
+                try {
+                    board.doMove(move)
+                } catch (e: Exception) {
+                    e.localizedMessage
+                }
             }
             Log.d(MTAG, board.fen.toString())
             chessPieceListener?.chessPieceClicked(fromCol, fromRow, col, row)
-            movePiece(fromCol, fromRow, col, row);
             Log.d(MTAG, "FEN After: " + board.fen)
         } else {
             val temp = pieceAt(col, row)
@@ -130,6 +134,7 @@ class ChessModel {
             ) {
                 possibleMovements(temp)
                 if (possibleMovements.isNotEmpty()) {
+//                    chessPieceListener?.drawPiece(possibleMovements)
                     fromCol = col
                     fromRow = row
                 }
@@ -141,6 +146,14 @@ class ChessModel {
 
     fun sideToMove(): Side? {
         return board.sideToMove
+    }
+
+    fun drawPossibleMovements() {
+        for (item in piecesBox) {
+            if (possibleMovements.contains(RowCol(item.row, item.col))) {
+                item.resId = R.drawable.crown
+            }
+        }
     }
 
     fun movePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
@@ -164,6 +177,16 @@ class ChessModel {
                 movingPiece.resId
             )
         )
+        piecesBox.add(
+            ChessPiece(
+                fromCol,
+                fromRow,
+                piece.player,
+                movingPiece.square,
+                piece.rank,
+                piece.resId
+            )
+        )
     }
 
     fun pieceAt(col: Int, row: Int): ChessPiece? {
@@ -185,7 +208,7 @@ class ChessModel {
                     ChessPlayer.WHITE,
                     whiteRookSquares!![i],
                     ChessRank.ROOK,
-                    R.drawable.rook_white
+                    R.drawable.ic_rook_white
                 )
             )
             piecesBox.add(
@@ -195,7 +218,7 @@ class ChessModel {
                     ChessPlayer.BLACK,
                     blackRookSquares!![i],
                     ChessRank.ROOK,
-                    R.drawable.rook_black
+                    R.drawable.ic_rook
                 )
             )
 
@@ -206,7 +229,7 @@ class ChessModel {
                     ChessPlayer.WHITE,
                     whiteKnightSquares!![i],
                     ChessRank.KNIGHT,
-                    R.drawable.knight_white
+                    R.drawable.ic_knight_white
                 )
             )
             piecesBox.add(
@@ -216,7 +239,7 @@ class ChessModel {
                     ChessPlayer.BLACK,
                     blackKnightSquares!![i],
                     ChessRank.KNIGHT,
-                    R.drawable.knight_black
+                    R.drawable.ic_knight
                 )
             )
 
@@ -227,7 +250,7 @@ class ChessModel {
                     ChessPlayer.WHITE,
                     whiteBishopSquares!![i],
                     ChessRank.BISHOP,
-                    R.drawable.bishop_white
+                    R.drawable.ic_bishop_white
                 )
             )
             piecesBox.add(
@@ -237,7 +260,7 @@ class ChessModel {
                     ChessPlayer.BLACK,
                     blackBishopSquares!![i],
                     ChessRank.BISHOP,
-                    R.drawable.bishop_black
+                    R.drawable.ic_bishop
                 )
             )
         }
@@ -250,7 +273,7 @@ class ChessModel {
                     ChessPlayer.WHITE,
                     whitePawnSquares!![i],
                     ChessRank.PAWN,
-                    R.drawable.pawn_white
+                    R.drawable.ic_pawn_white
                 )
             )
             piecesBox.add(
@@ -260,16 +283,16 @@ class ChessModel {
                     ChessPlayer.BLACK,
                     blackPawnSquares!![i],
                     ChessRank.PAWN,
-                    R.drawable.pawn_black
+                    R.drawable.ic_pawn
                 )
             )
         }
-        for (row in 0..7) {
-            for (col in 2..5) {
+        for (row in 2..5) {
+            for (col in 0..7) {
                 piecesBox.add(
                     ChessPiece(
-                        row,
                         col,
+                        row,
                         ChessPlayer.EMPTY,
                         Square.squareAt(rowColBinding.get(RowCol(row, col))!!),
                         ChessRank.NONE,
@@ -285,7 +308,7 @@ class ChessModel {
                 ChessPlayer.WHITE,
                 whiteQueenSquares!![0],
                 ChessRank.QUEEN,
-                R.drawable.queen_white
+                R.drawable.ic_queen_white
             )
         )
         piecesBox.add(
@@ -295,7 +318,7 @@ class ChessModel {
                 ChessPlayer.BLACK,
                 blackQueenSquares!![0],
                 ChessRank.QUEEN,
-                R.drawable.queen_black
+                R.drawable.ic_queen
             )
         )
 
@@ -306,7 +329,7 @@ class ChessModel {
                 ChessPlayer.WHITE,
                 whiteKingSquares!![0],
                 ChessRank.KING,
-                R.drawable.king_white
+                R.drawable.ic_king_white
             )
         )
         piecesBox.add(
@@ -316,7 +339,7 @@ class ChessModel {
                 ChessPlayer.BLACK,
                 blackKingSquares!![0],
                 ChessRank.KING,
-                R.drawable.king_black
+                R.drawable.ic_king
             )
         )
     }

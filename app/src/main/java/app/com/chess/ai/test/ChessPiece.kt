@@ -8,5 +8,5 @@ data class ChessPiece(
     val player: ChessPlayer,
     val square: Square,
     val rank: ChessRank,
-    val resId: Int
+    var resId: Int
 )

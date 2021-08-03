@@ -2,14 +2,23 @@ package app.com.chess.ai.test
 
 import android.content.Context
 import android.graphics.*
-import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import app.com.chess.ai.R
-import com.github.bhlangonijr.chesslib.Side
 import kotlin.math.min
+import android.graphics.Bitmap
+
+import androidx.core.graphics.drawable.DrawableCompat
+
+import android.os.Build
+
+import androidx.core.content.ContextCompat
+
+import android.graphics.drawable.Drawable
+
+
+
 
 class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), ChessPieceListener {
     private var originX = 20f
@@ -26,18 +35,19 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), 
 
     private val bitmaps = mutableMapOf<Int, Bitmap>()
     private val imgResIDs = setOf(
-        R.drawable.bishop_black,
-        R.drawable.bishop_white,
-        R.drawable.king_black,
-        R.drawable.king_white,
-        R.drawable.queen_black,
-        R.drawable.queen_white,
-        R.drawable.rook_black,
-        R.drawable.rook_white,
-        R.drawable.knight_black,
-        R.drawable.knight_white,
-        R.drawable.pawn_black,
-        R.drawable.pawn_white
+        R.drawable.ic_bishop,
+        R.drawable.ic_bishop_white,
+        R.drawable.ic_king,
+        R.drawable.ic_king_white,
+        R.drawable.ic_queen,
+        R.drawable.ic_queen_white,
+        R.drawable.ic_rook,
+        R.drawable.ic_rook_white,
+        R.drawable.ic_knight,
+        R.drawable.ic_knight_white,
+        R.drawable.ic_pawn,
+        R.drawable.ic_pawn_white,
+        R.drawable.ic_dot
     )
     var canvas: Canvas? = null
     var chessDelegate: ChessDelegate? = null
@@ -132,7 +142,8 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), 
 
     private fun loadBitmaps() {
         imgResIDs.forEach {
-            bitmaps[it] = BitmapFactory.decodeResource(resources, it)
+            bitmaps[it] = getBitmapFromVectorDrawable(it)
+//            bitmaps[it] = BitmapFactory.decodeResource(resources, it)
         }
     }
 
@@ -143,6 +154,22 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), 
             }
         }
     }
+
+    fun getBitmapFromVectorDrawable(drawableId: Int): Bitmap {
+        var drawable = ContextCompat.getDrawable(context!!, drawableId)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = DrawableCompat.wrap(drawable!!).mutate()
+        }
+        val bitmap = Bitmap.createBitmap(
+            drawable!!.intrinsicWidth,
+            drawable.intrinsicHeight, Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bitmap
+    }
+
 
     private fun drawSquareAt(col: Int, row: Int, isDark: Boolean) {
         paint.color = if (isDark) darkColor else lightColor
@@ -164,4 +191,13 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), 
     override fun showToast(message: String) {
         chessDelegate?.showToast(message)
     }
+
+    override fun drawPiece(possibleMovements: ArrayList<RowCol>) {
+        for (item in possibleMovements) {
+            drawPieceAt(item.col, item.row, R.drawable.ic_dot)
+        }
+        invalidate()
+//        chessDelegate?.drawPiece()
+    }
+
 }
