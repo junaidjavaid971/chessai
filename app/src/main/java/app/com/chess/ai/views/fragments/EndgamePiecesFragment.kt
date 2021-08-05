@@ -8,11 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import app.com.chess.ai.R
 import app.com.chess.ai.databinding.FragmentEndgameBinding
+import app.com.chess.ai.test.*
 import app.com.chess.ai.views.activities.BaseActivity
-import app.com.chess.ai.test.ChessDelegate
-import app.com.chess.ai.test.ChessModel
-import app.com.chess.ai.test.ChessPiece
-import app.com.chess.ai.test.ChessView
 
 
 class EndgamePiecesFragment : Fragment(), ChessDelegate {
@@ -43,6 +40,7 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate {
     override fun movePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
         chessModel.movePiece(fromCol, fromRow, toCol, toRow)
         Log.d(TAG, "from ($fromCol , $fromRow) to (${toCol} , ${toCol})")
+        chessModel.clearPossibleMovements()
         chessView.invalidate()
     }
 
@@ -50,7 +48,8 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate {
         baseActivity?.showToast(string)
     }
 
-    override fun drawPiece() {
+    override fun drawPiece(possibleMovements: ArrayList<RowCol>) {
+        chessModel.drawPossibleMovements(possibleMovements)
         chessView.invalidate()
     }
 }

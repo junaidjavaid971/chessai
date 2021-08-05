@@ -15,10 +15,6 @@ import android.os.Build
 
 import androidx.core.content.ContextCompat
 
-import android.graphics.drawable.Drawable
-
-
-
 
 class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), ChessPieceListener {
     private var originX = 20f
@@ -93,6 +89,7 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), 
     private fun drawPieces() {
         for (row in 0..7) {
             for (col in 0..7) {
+
                 if (row != -1 || col != -1) {
                     chessDelegate?.pieceAt(col, row)
                         ?.let {
@@ -193,11 +190,7 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), 
     }
 
     override fun drawPiece(possibleMovements: ArrayList<RowCol>) {
-        for (item in possibleMovements) {
-            drawPieceAt(item.col, item.row, R.drawable.ic_dot)
-        }
-        invalidate()
-//        chessDelegate?.drawPiece()
+        chessDelegate?.drawPiece(possibleMovements)
     }
 
 }

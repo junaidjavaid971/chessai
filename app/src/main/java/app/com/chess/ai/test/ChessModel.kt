@@ -16,7 +16,7 @@ class ChessModel {
 
     constructor()
 
-    var piecesBox = ArrayList<ChessPiece>()
+    var piecesBox = arrayListOf<ChessPiece>()
     var rowColBinding = hashMapOf<RowCol, Int>()
     var possibleMovements = ArrayList<RowCol>()
     private val TAG = "MainActivityTAG"
@@ -115,8 +115,8 @@ class ChessModel {
             Log.d(MTAG, "FEN Before: " + board.fen)
             val destination = pieceAt(col, row)
             val move = Move(origin?.square, destination?.square)
-            if (board.isMoveLegal(move, true)) {
-                possibleMovements.clear()
+            if (board.isMoveLegal(move, false)) {
+                clearPossibleMovements()
                 try {
                     board.doMove(move)
                 } catch (e: Exception) {
@@ -134,7 +134,7 @@ class ChessModel {
             ) {
                 possibleMovements(temp)
                 if (possibleMovements.isNotEmpty()) {
-//                    chessPieceListener?.drawPiece(possibleMovements)
+                    chessPieceListener?.drawPiece(possibleMovements)
                     fromCol = col
                     fromRow = row
                 }
@@ -144,15 +144,26 @@ class ChessModel {
         }
     }
 
+    //
     fun sideToMove(): Side? {
         return board.sideToMove
     }
 
-    fun drawPossibleMovements() {
-        for (item in piecesBox) {
-            if (possibleMovements.contains(RowCol(item.row, item.col))) {
-                item.resId = R.drawable.crown
-            }
+    fun drawPossibleMovements(possibleMovements: ArrayList<RowCol>) {
+        for (item in possibleMovements) {
+            val piece = pieceAt(item.col, item.row)
+            piecesBox.remove(piece)
+
+            piecesBox.add(
+                ChessPiece(
+                    piece?.col!!,
+                    piece.row,
+                    piece.player,
+                    piece.square,
+                    piece.rank,
+                    R.drawable.ic_dot
+                )
+            )
         }
     }
 
@@ -174,7 +185,7 @@ class ChessModel {
                 movingPiece.player,
                 piece?.square!!,
                 movingPiece.rank,
-                movingPiece.resId
+                if (movingPiece.resId == R.drawable.ic_dot) 0 else movingPiece.resId
             )
         )
         piecesBox.add(
@@ -184,9 +195,28 @@ class ChessModel {
                 piece.player,
                 movingPiece.square,
                 piece.rank,
-                piece.resId
+                if (piece.resId == R.drawable.ic_dot) 0 else piece.resId
             )
         )
+    }
+
+    fun clearPossibleMovements() {
+        for (item in 0 until piecesBox.size) {
+            val possiblePiece = pieceAt(piecesBox[item].col, piecesBox[item].row)
+            if (possiblePiece?.resId == R.drawable.ic_dot) {
+                piecesBox.remove(possiblePiece)
+                piecesBox.add(
+                    ChessPiece(
+                        possiblePiece.col,
+                        possiblePiece.row,
+                        possiblePiece.player,
+                        possiblePiece.square,
+                        possiblePiece.rank,
+                        0
+                    )
+                )
+            }
+        }
     }
 
     fun pieceAt(col: Int, row: Int): ChessPiece? {
