@@ -16,7 +16,7 @@ import android.os.Build
 import androidx.core.content.ContextCompat
 
 
-class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), ChessPieceListener {
+class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private var originX = 20f
     private var originY = 200f
     private var cellSide = 130f
@@ -53,7 +53,8 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), 
 
     init {
         loadBitmaps()
-        chessModel = ChessModel(this)
+//        chessModel = ChessModel(this)
+        chessModel = ChessModel()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -79,7 +80,7 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), 
             MotionEvent.ACTION_UP -> {
                 val col = ((event.x - originX) / cellSide).toInt()
                 val row = 7 - ((event.y - originY) / cellSide).toInt()
-                chessModel?.makeMove(col, row)
+                chessDelegate?.makeMove(col, row)
             }
         }
         invalidate()
@@ -140,7 +141,6 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), 
     private fun loadBitmaps() {
         imgResIDs.forEach {
             bitmaps[it] = getBitmapFromVectorDrawable(it)
-//            bitmaps[it] = BitmapFactory.decodeResource(resources, it)
         }
     }
 
@@ -179,7 +179,7 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), 
         )
     }
 
-    override fun chessPieceClicked(fromCol: Int, fromRow: Int, col: Int, row: Int) {
+    /*override fun chessPieceClicked(fromCol: Int, fromRow: Int, col: Int, row: Int) {
         chessDelegate?.movePiece(fromCol, fromRow, col, row)
         movingPiece = null
         movingPieceBitmap = null
@@ -191,6 +191,6 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs), 
 
     override fun drawPiece(possibleMovements: ArrayList<RowCol>) {
         chessDelegate?.drawPiece(possibleMovements)
-    }
+    }*/
 
 }

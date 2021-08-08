@@ -12,12 +12,13 @@ import app.com.chess.ai.test.*
 import app.com.chess.ai.views.activities.BaseActivity
 
 
-class EndgamePiecesFragment : Fragment(), ChessDelegate {
+class EndgamePiecesFragment : Fragment(), ChessDelegate, ChessPieceListener {
 
-    var chessModel = ChessModel()
+    var chessModel = ChessModel(this)
     lateinit var chessView: ChessView
     private val TAG = "EndgameFragment"
     var baseActivity: BaseActivity<FragmentEndgameBinding>? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,11 +38,24 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate {
         return chessModel.pieceAt(col, row)
     }
 
+    override fun makeMove(col: Int, row: Int) {
+        for (i in 0..3) {
+            chessModel.clearPossibleMovements()
+        }
+        chessModel.makeMove(col, row)
+    }
+
     override fun movePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
         chessModel.movePiece(fromCol, fromRow, toCol, toRow)
         Log.d(TAG, "from ($fromCol , $fromRow) to (${toCol} , ${toCol})")
-        chessModel.clearPossibleMovements()
+        for (i in 0..3) {
+            chessModel.clearPossibleMovements()
+        }
         chessView.invalidate()
+    }
+
+    override fun chessPieceClicked(fromCol: Int, fromRow: Int, col: Int, row: Int) {
+        movePiece(fromCol, fromRow, col, row)
     }
 
     override fun showToast(string: String) {
