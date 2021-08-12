@@ -20,6 +20,7 @@ class ChessModel {
     private val MTAG = "MovementTAG"
 
     val piecesBox = arrayListOf<ChessPiece>()
+    val possiblePieces = arrayListOf<ChessPiece>()
     var rowColBinding = hashMapOf<RowCol, Int>()
     var possibleMovements = ArrayList<RowCol>()
 
@@ -149,9 +150,9 @@ class ChessModel {
     fun drawPossibleMovements(possibleMovements: ArrayList<RowCol>) {
         for (item in possibleMovements) {
             val piece = pieceAt(item.col, item.row)
-            piecesBox.remove(piece)
+            possiblePieces.remove(piece)
 
-            piecesBox.add(
+            possiblePieces.add(
                 ChessPiece(
                     piece?.col!!,
                     piece.row,
@@ -198,49 +199,20 @@ class ChessModel {
     }
 
     fun clearPossibleMovements() {
-        for (item in 0 until piecesBox.size) {
-            val possiblePiece = pieceAt(piecesBox[item].col, piecesBox[item].row)
-            if (possiblePiece?.resId == R.drawable.ic_dot) {
-                piecesBox.remove(possiblePiece)
-                var resId = 0
-                if (possiblePiece.player == ChessPlayer.BLACK) {
-                    when (possiblePiece.rank) {
-                        ChessRank.NONE -> resId = 0
-                        ChessRank.BISHOP -> resId = R.drawable.ic_bishop
-                        ChessRank.KING -> resId = R.drawable.ic_king
-                        ChessRank.QUEEN -> resId = R.drawable.ic_queen
-                        ChessRank.ROOK -> resId = R.drawable.ic_rook
-                        ChessRank.KNIGHT -> resId = R.drawable.ic_knight
-                        ChessRank.PAWN -> resId = R.drawable.ic_pawn
-                    }
-                } else if (possiblePiece.player == ChessPlayer.WHITE) {
-                    when (possiblePiece.rank) {
-                        ChessRank.NONE -> resId = 0
-                        ChessRank.BISHOP -> resId = R.drawable.ic_bishop_white
-                        ChessRank.KING -> resId = R.drawable.ic_king_white
-                        ChessRank.QUEEN -> resId = R.drawable.ic_queen_white
-                        ChessRank.ROOK -> resId = R.drawable.ic_rook_white
-                        ChessRank.KNIGHT -> resId = R.drawable.ic_knight_white
-                        ChessRank.PAWN -> resId = R.drawable.ic_pawn_white
-                    }
-                }
-
-                piecesBox.add(
-                    ChessPiece(
-                        possiblePiece.col,
-                        possiblePiece.row,
-                        possiblePiece.player,
-                        possiblePiece.square,
-                        possiblePiece.rank,
-                        resId
-                    )
-                )
-            }
-        }
+        possiblePieces.clear()
     }
 
     fun pieceAt(col: Int, row: Int): ChessPiece? {
         for (piece in piecesBox) {
+            if (col == piece.col && row == piece.row) {
+                return piece
+            }
+        }
+        return null
+    }
+
+    fun possiblePieceAt(col: Int, row: Int): ChessPiece? {
+        for (piece in possiblePieces) {
             if (col == piece.col && row == piece.row) {
                 return piece
             }

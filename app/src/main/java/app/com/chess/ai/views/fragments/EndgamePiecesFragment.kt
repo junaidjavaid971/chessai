@@ -38,6 +38,10 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate, ChessPieceListener {
         return chessModel.pieceAt(col, row)
     }
 
+    override fun possibleMovementAt(col: Int, row: Int): ChessPiece? {
+        return chessModel.possiblePieceAt(col, row)
+    }
+
     override fun makeMove(col: Int, row: Int) {
         for (i in 0..3) {
             chessModel.clearPossibleMovements()

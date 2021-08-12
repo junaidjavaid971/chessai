@@ -105,6 +105,12 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
                             drawPieceAt(col, row, it.resId)
                         }
                     }
+
+                chessDelegate?.possibleMovementAt(col, row)?.let {
+                    if (it != movingPiece && it.resId != 0) {
+                        drawPieceAt(col, row, it.resId)
+                    }
+                }
             }
         }
 
