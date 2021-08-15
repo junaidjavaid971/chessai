@@ -117,6 +117,7 @@ class ChessModel {
     }
 
     fun makeMove(col: Int, row: Int) {
+
         if (possibleMovements.contains(RowCol(row, col))) {
             Log.d(MTAG, "FEN Before: " + board.fen)
             val destination = pieceAt(col, row)
@@ -165,17 +166,110 @@ class ChessModel {
         }
     }
 
+
+    /**** Moving pieces on the view board
+     * the Logic is that pieceBox contains all the 64 squares and it should never has less than that
+     * when a piece moves
+     * We remove it from the pieceBox
+     * We add an empty place to replace the moved piece
+     * we add the moving piece in pieceBox with target square info .****/
+
     fun movePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
+
         if (fromCol == toCol && fromRow == toRow) return
         val movingPiece = pieceAt(fromCol, fromRow) ?: return
         val piece = pieceAt(toCol, toRow)
+        // i added a pawn  to remove because if will be removed after the en passant happens
+        var pawnToRemove = pieceAt(0, 0) ?: return
+        var rookToMove = pieceAt(0, 0) ?: return
+        // to check en passant happened and do things accordingly
+        var isEnPassant=false
+
         piece?.let {
             if (it.player == movingPiece.player) {
                 return
             }
             piecesBox.remove(it)
         }
+
+        //remove the piece that moved from its intial square
         piecesBox.remove(movingPiece)
+
+        /***    En passant  ***/
+
+        // check that the pawn moved to an empty square
+        if(piece?.resId==0 && movingPiece?.rank==ChessRank.PAWN) {
+            chessPieceListener?.showToast("Empty square move")
+            // check that the pawn move to the column on the left or right (pawn taking not just forward move)
+            if (piece.col == movingPiece.col + 1 || piece.col == movingPiece.col - 1) {
+                if(movingPiece.player==ChessPlayer.WHITE){
+                    pawnToRemove = pieceAt(piece.col, piece.row - 1) ?: return
+                }
+                else{
+                    pawnToRemove = pieceAt(piece.col, piece.row + 1) ?: return
+                }
+
+                // to be removed just some toast for knowing it is en passant
+                chessPieceListener?.showToast(piece.row.toString() + " " + "Prise en Passant piece row ")
+                chessPieceListener?.showToast(pawnToRemove?.rank.toString() + " " + "piece rank ")
+                isEnPassant=true
+
+            }
+
+            if(isEnPassant)
+            {
+                // removing the pawn that was taken en passant
+                piecesBox.remove(pawnToRemove)
+
+                // adding an empty piece in place of the removed pawn
+                piecesBox.add(
+                    ChessPiece(
+                        pawnToRemove.col,
+                        pawnToRemove.row,
+                        ChessPlayer.EMPTY,
+                        pawnToRemove.square,
+                        ChessRank.NONE,
+                        0
+                    )
+                )
+            }
+        }
+
+        /**Short castling **/
+
+        if(movingPiece.rank== ChessRank.KING && movingPiece.col == 4 && piece?.col == 6 ){
+            chessPieceListener?.showToast(movingPiece.rank.toString() + " " + "king short castle ")
+            if(movingPiece.player==ChessPlayer.WHITE){
+                rookToMove = pieceAt(7, 0) ?: return
+            }
+            else{
+                rookToMove = pieceAt(7, 7) ?: return
+
+            }
+
+            movePiece(rookToMove.col,rookToMove.row,5,rookToMove.row)
+
+        }
+
+        /**Long castling ***/
+
+       else if(movingPiece.rank== ChessRank.KING && movingPiece.col == 4 && piece?.col == 2 ){
+
+            chessPieceListener?.showToast(movingPiece.rank.toString() + " " + "long short castle ")
+            if(movingPiece.player==ChessPlayer.WHITE){
+                rookToMove = pieceAt(0, 0) ?: return
+            }
+            else{
+                rookToMove = pieceAt(0, 7) ?: return
+
+            }
+
+            movePiece(rookToMove.col,rookToMove.row,3,rookToMove.row)
+        }
+
+        /** Pieces and squares handling **/
+
+        // add the moved piece in its destination square
         piecesBox.add(
             ChessPiece(
                 toCol,
@@ -186,13 +280,15 @@ class ChessModel {
                 movingPiece.resId
             )
         )
+        // add an empty piece in the free square after the piece has moved
+
         piecesBox.add(
             ChessPiece(
                 fromCol,
                 fromRow,
-                piece.player,
+                ChessPlayer.EMPTY,
                 movingPiece.square,
-                piece.rank,
+                ChessRank.NONE,
                 0
             )
         )
