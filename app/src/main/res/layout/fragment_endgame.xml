@@ -64,9 +64,9 @@
             <app.com.chess.ai.test.ChessView
                 android:id="@+id/rv_chessboard"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_margin="@dimen/_5sdp"
-                app:layout_constraintBottom_toTopOf="@id/cv_displayer"
+                app:layout_constraintBottom_toTopOf="@id/layout_arrows"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar" />

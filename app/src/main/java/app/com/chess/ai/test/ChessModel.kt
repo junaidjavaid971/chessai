@@ -2,12 +2,15 @@ package app.com.chess.ai.test
 
 import android.util.Log
 import app.com.chess.ai.R
+import app.com.chess.ai.models.global.PGN
 import com.github.bhlangonijr.chesslib.Board
 import com.github.bhlangonijr.chesslib.Piece
 import com.github.bhlangonijr.chesslib.Side
 import com.github.bhlangonijr.chesslib.Square
 import com.github.bhlangonijr.chesslib.move.Move
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ChessModel {
     constructor(chessPieceListener: ChessPieceListener) {
@@ -20,9 +23,12 @@ class ChessModel {
     private val MTAG = "MovementTAG"
 
     val piecesBox = arrayListOf<ChessPiece>()
+    val previousMoves = arrayListOf<ChessMove>()
+    val nextMoves = arrayListOf<ChessMove>()
     val possiblePieces = arrayListOf<ChessPiece>()
     var rowColBinding = hashMapOf<RowCol, Int>()
     var possibleMovements = ArrayList<RowCol>()
+    var pgnArraylist: ArrayList<PGN> = ArrayList()
 
     var emptySquares: List<Square>? = null
     var whiteRookSquares: List<Square>? = null
@@ -45,6 +51,8 @@ class ChessModel {
 
     private var fromCol: Int = -1
     private var fromRow: Int = -1
+    private var moveCount: Int = 0
+    var currentMoveCount = -1
 
     init {
         initRowColBinding()
@@ -117,7 +125,6 @@ class ChessModel {
     }
 
     fun makeMove(col: Int, row: Int) {
-
         if (possibleMovements.contains(RowCol(row, col))) {
             Log.d(MTAG, "FEN Before: " + board.fen)
             val destination = pieceAt(col, row)
@@ -145,6 +152,45 @@ class ChessModel {
             } else {
                 chessPieceListener?.showToast("Opponent's turn")
             }
+        }
+    }
+
+    private fun savePgn(movedPiece: ChessPiece) {
+        if (movedPiece.player == ChessPlayer.BLACK) {
+            val pgn = pgnArraylist[moveCount]
+            var targetMove =
+                movedPiece.square.name.toLowerCase(Locale.ROOT)
+            if (movedPiece.rank == ChessRank.BISHOP) {
+                targetMove = "B$targetMove"
+            } else if (movedPiece.rank == ChessRank.KING) {
+                targetMove = "K$targetMove"
+            } else if (movedPiece.rank == ChessRank.ROOK) {
+                targetMove = "R$targetMove"
+            } else if (movedPiece.rank == ChessRank.KNIGHT) {
+                targetMove = "N$targetMove"
+            } else if (movedPiece.rank == ChessRank.QUEEN) {
+                targetMove = "Q$targetMove"
+            }
+            pgn.blackMove = targetMove
+            pgnArraylist[moveCount] = pgn
+            moveCount++
+        } else {
+            val pgn = PGN()
+            var targetMove =
+                movedPiece.square.name.toLowerCase(Locale.ROOT)
+            if (movedPiece.rank == ChessRank.BISHOP) {
+                targetMove = "B$targetMove"
+            } else if (movedPiece.rank == ChessRank.KING) {
+                targetMove = "K$targetMove"
+            } else if (movedPiece.rank == ChessRank.ROOK) {
+                targetMove = "R$targetMove"
+            } else if (movedPiece.rank == ChessRank.KNIGHT) {
+                targetMove = "N$targetMove"
+            } else if (movedPiece.rank == ChessRank.QUEEN) {
+                targetMove = "Q$targetMove"
+            }
+            pgn.whiteMove = targetMove
+            pgnArraylist.add(pgn)
         }
     }
 
@@ -183,41 +229,39 @@ class ChessModel {
         var pawnToRemove = pieceAt(0, 0) ?: return
         var rookToMove = pieceAt(0, 0) ?: return
         // to check en passant happened and do things accordingly
-        var isEnPassant=false
+        var isEnPassant = false
 
         piece?.let {
             if (it.player == movingPiece.player) {
                 return
             }
+            previousMoves.add(ChessMove(it, movingPiece))
             piecesBox.remove(it)
         }
 
         //remove the piece that moved from its intial square
         piecesBox.remove(movingPiece)
-
         /***    En passant  ***/
 
         // check that the pawn moved to an empty square
-        if(piece?.resId==0 && movingPiece?.rank==ChessRank.PAWN) {
+        if (piece?.resId == 0 && movingPiece?.rank == ChessRank.PAWN) {
             chessPieceListener?.showToast("Empty square move")
             // check that the pawn move to the column on the left or right (pawn taking not just forward move)
             if (piece.col == movingPiece.col + 1 || piece.col == movingPiece.col - 1) {
-                if(movingPiece.player==ChessPlayer.WHITE){
+                if (movingPiece.player == ChessPlayer.WHITE) {
                     pawnToRemove = pieceAt(piece.col, piece.row - 1) ?: return
-                }
-                else{
+                } else {
                     pawnToRemove = pieceAt(piece.col, piece.row + 1) ?: return
                 }
 
                 // to be removed just some toast for knowing it is en passant
                 chessPieceListener?.showToast(piece.row.toString() + " " + "Prise en Passant piece row ")
                 chessPieceListener?.showToast(pawnToRemove?.rank.toString() + " " + "piece rank ")
-                isEnPassant=true
+                isEnPassant = true
 
             }
 
-            if(isEnPassant)
-            {
+            if (isEnPassant) {
                 // removing the pawn that was taken en passant
                 piecesBox.remove(pawnToRemove)
 
@@ -237,61 +281,60 @@ class ChessModel {
 
         /**Short castling **/
 
-        if(movingPiece.rank== ChessRank.KING && movingPiece.col == 4 && piece?.col == 6 ){
+        if (movingPiece.rank == ChessRank.KING && movingPiece.col == 4 && piece?.col == 6) {
             chessPieceListener?.showToast(movingPiece.rank.toString() + " " + "king short castle ")
-            if(movingPiece.player==ChessPlayer.WHITE){
+            if (movingPiece.player == ChessPlayer.WHITE) {
                 rookToMove = pieceAt(7, 0) ?: return
-            }
-            else{
+            } else {
                 rookToMove = pieceAt(7, 7) ?: return
 
             }
 
-            movePiece(rookToMove.col,rookToMove.row,5,rookToMove.row)
+            movePiece(rookToMove.col, rookToMove.row, 5, rookToMove.row)
 
         }
 
         /**Long castling ***/
 
-       else if(movingPiece.rank== ChessRank.KING && movingPiece.col == 4 && piece?.col == 2 ){
+        else if (movingPiece.rank == ChessRank.KING && movingPiece.col == 4 && piece?.col == 2) {
 
             chessPieceListener?.showToast(movingPiece.rank.toString() + " " + "long short castle ")
-            if(movingPiece.player==ChessPlayer.WHITE){
+            if (movingPiece.player == ChessPlayer.WHITE) {
                 rookToMove = pieceAt(0, 0) ?: return
-            }
-            else{
+            } else {
                 rookToMove = pieceAt(0, 7) ?: return
 
             }
 
-            movePiece(rookToMove.col,rookToMove.row,3,rookToMove.row)
+            movePiece(rookToMove.col, rookToMove.row, 3, rookToMove.row)
         }
 
         /** Pieces and squares handling **/
 
-        // add the moved piece in its destination square
-        piecesBox.add(
-            ChessPiece(
-                toCol,
-                toRow,
-                movingPiece.player,
-                piece?.square!!,
-                movingPiece.rank,
-                movingPiece.resId
-            )
+        // add the moved piece in its destination
+        val finalMove = ChessPiece(
+            toCol,
+            toRow,
+            movingPiece.player,
+            piece?.square!!,
+            movingPiece.rank,
+            movingPiece.resId
         )
+        piecesBox.add(finalMove)
         // add an empty piece in the free square after the piece has moved
 
-        piecesBox.add(
-            ChessPiece(
-                fromCol,
-                fromRow,
-                ChessPlayer.EMPTY,
-                movingPiece.square,
-                ChessRank.NONE,
-                0
-            )
+        val initialMove = ChessPiece(
+            fromCol,
+            fromRow,
+            ChessPlayer.EMPTY,
+            movingPiece.square,
+            ChessRank.NONE,
+            0
         )
+        piecesBox.add(initialMove)
+
+        nextMoves.add(ChessMove(initialMove, finalMove))
+        savePgn(finalMove)
     }
 
     fun clearPossibleMovements() {
@@ -314,6 +357,51 @@ class ChessModel {
             }
         }
         return null
+    }
+
+    fun restoreLeftMove() {
+        if (currentMoveCount == -1 || currentMoveCount > previousMoves.size) {
+            currentMoveCount = previousMoves.size
+        }
+        if (currentMoveCount != 0)
+            currentMoveCount--
+
+        val move = previousMoves[currentMoveCount]
+        val initialMove = move.initialMove
+        val finalMove = move.finalMove
+
+        piecesBox.remove(pieceAt(initialMove.col, initialMove.row))
+        piecesBox.remove(pieceAt(finalMove.col, finalMove.row))
+
+        piecesBox.add(initialMove)
+        piecesBox.add(finalMove)
+    }
+
+    fun restoreRightMove() {
+        if (currentMoveCount >= nextMoves.size || currentMoveCount == -1) {
+            currentMoveCount = nextMoves.size - 1
+        }
+
+        val move = nextMoves[currentMoveCount]
+        val initialMove = move.initialMove
+        val finalMove = move.finalMove
+
+        piecesBox.remove(pieceAt(initialMove.col, initialMove.row))
+        piecesBox.remove(pieceAt(finalMove.col, finalMove.row))
+        piecesBox.add(initialMove)
+        piecesBox.add(finalMove)
+
+        currentMoveCount++
+    }
+
+    fun generatePGN(): String {
+        var moveString = ""
+        for (i in 0 until pgnArraylist.size) {
+            moveString =
+                moveString + (i + 1).toString() + ". " + pgnArraylist[i].whiteMove + " " + pgnArraylist[i].blackMove + " "
+        }
+        Log.d("PGNString", moveString)
+        return moveString
     }
 
     fun reset() {

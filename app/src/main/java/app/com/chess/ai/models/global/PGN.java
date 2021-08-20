@@ -1,7 +1,8 @@
 package app.com.chess.ai.models.global;
 
 public class PGN {
-    private String whiteMove, blackMove;
+    private String whiteMove = "";
+    private String blackMove = "";
 
     public PGN() {
     }

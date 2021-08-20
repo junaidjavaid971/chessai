@@ -30,8 +30,8 @@ class SaveGameActivity : BaseActivity<LayoutSaveGameBinding>() {
         bindView(R.layout.layout_save_game)
 
         pgn = intent?.getStringExtra("pgn").toString()
-        fenArrayList = intent?.getStringArrayListExtra("fenArray") as ArrayList<String>
-        positionArrayList = (intent?.getSerializableExtra("positionArray") as ArrayList<Positions>)
+//        fenArrayList = intent?.getStringArrayListExtra("fenArray") as ArrayList<String>
+//        positionArrayList = (intent?.getSerializableExtra("positionArray") as ArrayList<Positions>)
 
         binding?.btnSave?.setOnClickListener {
             if (validateInfo()) {
@@ -60,7 +60,7 @@ class SaveGameActivity : BaseActivity<LayoutSaveGameBinding>() {
     }
 
     private fun savePgn() {
-        val file = File(Environment.getExternalStorageDirectory(), "pgnfile.pgn");
+        val file = File(Environment.getExternalStorageDirectory(), "pgnFile.pgn");
         if (file.exists()) {
             file.delete()
         }
@@ -82,18 +82,19 @@ class SaveGameActivity : BaseActivity<LayoutSaveGameBinding>() {
         writer.flush()
         writer.close()
 
-        val pgnParser = PgnHolder("/storage/emulated/0/pgnfile.pgn")
+        val pgnParser = PgnHolder("/storage/emulated/0/pgnFile.pgn")
         pgnParser.loadPgn()
 
-        val game = Games()
+        /*val game = Games()
         game.tournamentName = tournamentName
         game.eventDate = getTodayDate()
         game.pgn = pgn
+
         game.fenList = fenArrayList
         game.positionsList = positionArrayList
 
         val saveGame = SaveGame()
-        saveGame.execute(game)
+        saveGame.execute(game)*/
     }
 
     private fun getTodayDate(): String {
