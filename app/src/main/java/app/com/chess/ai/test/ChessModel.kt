@@ -3,6 +3,7 @@ package app.com.chess.ai.test
 import android.util.Log
 import app.com.chess.ai.R
 import app.com.chess.ai.models.global.PGN
+import com.fasterxml.jackson.core.TreeNode
 import com.github.bhlangonijr.chesslib.Board
 import com.github.bhlangonijr.chesslib.Piece
 import com.github.bhlangonijr.chesslib.Side
@@ -23,8 +24,10 @@ class ChessModel {
     private val MTAG = "MovementTAG"
 
     val piecesBox = arrayListOf<ChessPiece>()
-    val previousMoves = arrayListOf<ChessMove>()
-    val nextMoves = arrayListOf<ChessMove>()
+
+    /*val previousMoves = arrayListOf<ChessMove>()
+    val nextMoves = arrayListOf<ChessMove>()*/
+    val movesList = arrayListOf<Move>()
     val possiblePieces = arrayListOf<ChessPiece>()
     var rowColBinding = hashMapOf<RowCol, Int>()
     var possibleMovements = ArrayList<RowCol>()
@@ -46,6 +49,11 @@ class ChessModel {
     var blackQueenSquares: List<Square>? = null
     var chessPieceListener: ChessPieceListener? = null
 
+    var moveTree: MoveTree<ChessMove>? = null
+    var currentNode: MoveTree<ChessMove>? = null
+
+    var moveStack = ArrayDeque<Move>()
+
     lateinit var board: Board
     var origin: ChessPiece? = null
 
@@ -53,6 +61,7 @@ class ChessModel {
     private var fromRow: Int = -1
     private var moveCount: Int = 0
     var currentMoveCount = -1
+    var nestedNodeSize = -1
 
     init {
         initRowColBinding()
@@ -133,6 +142,7 @@ class ChessModel {
                 if (board.isMoveLegal(move, false)) {
                     possibleMovements.clear()
                     board.doMove(move)
+                    movesList.add(move)
                     Log.d(MTAG, "FEN After: " + board.fen)
                 }
             } catch (e: Exception) {
@@ -221,9 +231,9 @@ class ChessModel {
      * we add the moving piece in pieceBox with target square info .****/
 
     fun movePiece(fromCol: Int, fromRow: Int, toCol: Int, toRow: Int) {
-
         if (fromCol == toCol && fromRow == toRow) return
         val movingPiece = pieceAt(fromCol, fromRow) ?: return
+        var initialPiece: MovingPieces? = null
         val piece = pieceAt(toCol, toRow)
         // i added a pawn  to remove because if will be removed after the en passant happens
         var pawnToRemove = pieceAt(0, 0) ?: return
@@ -235,7 +245,7 @@ class ChessModel {
             if (it.player == movingPiece.player) {
                 return
             }
-            previousMoves.add(ChessMove(it, movingPiece))
+            initialPiece = MovingPieces(it, movingPiece)
             piecesBox.remove(it)
         }
 
@@ -244,7 +254,7 @@ class ChessModel {
         /***    En passant  ***/
 
         // check that the pawn moved to an empty square
-        if (piece?.resId == 0 && movingPiece?.rank == ChessRank.PAWN) {
+        if (piece?.resId == 0 && movingPiece.rank == ChessRank.PAWN) {
             chessPieceListener?.showToast("Empty square move")
             // check that the pawn move to the column on the left or right (pawn taking not just forward move)
             if (piece.col == movingPiece.col + 1 || piece.col == movingPiece.col - 1) {
@@ -256,7 +266,7 @@ class ChessModel {
 
                 // to be removed just some toast for knowing it is en passant
                 chessPieceListener?.showToast(piece.row.toString() + " " + "Prise en Passant piece row ")
-                chessPieceListener?.showToast(pawnToRemove?.rank.toString() + " " + "piece rank ")
+                chessPieceListener?.showToast(pawnToRemove.rank.toString() + " " + "piece rank ")
                 isEnPassant = true
 
             }
@@ -332,8 +342,34 @@ class ChessModel {
             0
         )
         piecesBox.add(initialMove)
+        val finalPiece = MovingPieces(initialMove, finalMove)
+        if (moveTree == null) {
+            moveTree = MoveTree(ChessMove(initialPiece!!, finalPiece))
+            val node = MoveTree(ChessMove(initialPiece!!, finalPiece))
+            moveTree!!.addChild(node)
+        } else {
+            var node = MoveTree(ChessMove(initialPiece!!, finalPiece))
+            while (node.children.size > 0) {
+                
+            }
+            if (currentMoveCount != -1) {
+                var temp = moveTree?.children?.get(currentMoveCount)!!
+                if (nestedNodeSize != -1) {
+                    temp = node.children.get(nestedNodeSize)
+                }
+                val childNode = MoveTree(ChessMove(initialPiece!!, finalPiece))
+                childNode.addChild(temp)
+                childNode.addChild(node)
 
-        nextMoves.add(ChessMove(initialMove, finalMove))
+                moveTree!!.updateChild(childNode, temp)
+            } else
+                moveTree?.addChild(node)
+        }
+
+        /*if (moveTree != null) Log.d(
+            "TreeNode",
+            "Child: " + moveTree?.value?.initialPiece?.square?.name + " - " + moveTree?.value?.finalPiece?.square?.name
+        )*/
         savePgn(finalMove)
     }
 
@@ -360,38 +396,103 @@ class ChessModel {
     }
 
     fun restoreLeftMove() {
-        if (currentMoveCount == -1 || currentMoveCount > previousMoves.size) {
-            currentMoveCount = previousMoves.size
+        if (currentMoveCount < 0 || currentMoveCount >= movesList.size) {
+            currentMoveCount = moveTree?.children?.size!! - 1
         }
-        if (currentMoveCount != 0)
-            currentMoveCount--
+        if (currentMoveCount >= 0) {
+            currentNode = moveTree?.children?.get(currentMoveCount)
+            if (currentNode?.children?.size == 0) {
+                currentMoveCount--
+            }
+            if (currentMoveCount == -1) {
+                currentMoveCount--
+            }
+        }
 
-        val move = previousMoves[currentMoveCount]
-        val initialMove = move.initialMove
-        val finalMove = move.finalMove
+        if (currentNode?.children?.size!! > 0 && currentMoveCount >= 0) {
+            if (nestedNodeSize == -1) {
+                nestedNodeSize = currentNode?.children?.size!! - 1
+            }
+            currentNode = currentNode?.children?.get(nestedNodeSize)
+            nestedNodeSize--
+            if (nestedNodeSize < 0) {
+                currentMoveCount--
+            }
+        }
 
-        piecesBox.remove(pieceAt(initialMove.col, initialMove.row))
-        piecesBox.remove(pieceAt(finalMove.col, finalMove.row))
+        piecesBox.remove(
+            pieceAt(
+                currentNode?.value?.initialPosition?.initialPiece?.col!!,
+                currentNode?.value?.initialPosition?.initialPiece?.row!!
+            )
+        )
+        piecesBox.remove(
+            pieceAt(
+                currentNode?.value?.initialPosition?.finalPiece?.col!!,
+                currentNode?.value?.initialPosition?.finalPiece?.row!!
+            )
+        )
 
-        piecesBox.add(initialMove)
-        piecesBox.add(finalMove)
+        piecesBox.add(currentNode?.value?.initialPosition?.initialPiece!!)
+        piecesBox.add(currentNode?.value!!.initialPosition.finalPiece)
+
+        if (moveStack.isNotEmpty())
+            moveStack.push(board.undoMove())
     }
 
     fun restoreRightMove() {
-        if (currentMoveCount >= nextMoves.size || currentMoveCount == -1) {
-            currentMoveCount = nextMoves.size - 1
+        if (currentMoveCount >= moveTree?.children?.size!! || currentMoveCount < 0) {
+            currentMoveCount = 0
+        }
+        if (currentMoveCount >= 0) {
+            currentNode = moveTree?.children?.get(currentMoveCount)
+            /*if ((currentMoveCount + 1) == moveTree?.children?.size) {
+                currentNode = moveTree?.children?.get(currentMoveCount)
+            } else {
+                currentNode = moveTree?.children?.get(currentMoveCount + 1)
+            }*/
+            if (currentNode?.children?.size == 0) {
+                currentMoveCount++
+            }
+
+            if (currentMoveCount == -1) {
+                currentMoveCount++
+            }
         }
 
-        val move = nextMoves[currentMoveCount]
-        val initialMove = move.initialMove
-        val finalMove = move.finalMove
+        if (currentNode?.children?.size!! > 0 && currentMoveCount >= 0) {
+            if (nestedNodeSize == -1) {
+                nestedNodeSize = currentNode?.children?.size!! - 1
+            }
+            if ((nestedNodeSize + 1) == moveTree?.children?.size) {
+                currentNode = moveTree?.children?.get(nestedNodeSize)
+            } else {
+                currentNode = moveTree?.children?.get(nestedNodeSize + 1)
+            }
+            if (nestedNodeSize >= (currentNode?.children?.size!! - 1)) {
+                currentMoveCount++
+            }
+            nestedNodeSize++
+        }
 
-        piecesBox.remove(pieceAt(initialMove.col, initialMove.row))
-        piecesBox.remove(pieceAt(finalMove.col, finalMove.row))
-        piecesBox.add(initialMove)
-        piecesBox.add(finalMove)
+        piecesBox.remove(
+            pieceAt(
+                currentNode?.value?.finalPosition?.initialPiece?.col!!,
+                currentNode?.value?.finalPosition?.initialPiece?.row!!
+            )
+        )
+        piecesBox.remove(
+            pieceAt(
+                currentNode?.value?.finalPosition?.finalPiece?.col!!,
+                currentNode?.value?.finalPosition?.finalPiece?.row!!
+            )
+        )
 
-        currentMoveCount++
+        piecesBox.add(currentNode?.value?.finalPosition?.initialPiece!!)
+        piecesBox.add(currentNode?.value!!.finalPosition.finalPiece)
+
+        if (moveStack.isNotEmpty())
+            board.doMove(moveStack.remove())
     }
 
     fun generatePGN(): String {
