@@ -350,7 +350,7 @@ class ChessModel {
         } else {
             var node = MoveTree(ChessMove(initialPiece!!, finalPiece))
             while (node.children.size > 0) {
-                
+
             }
             if (currentMoveCount != -1) {
                 var temp = moveTree?.children?.get(currentMoveCount)!!
@@ -366,10 +366,7 @@ class ChessModel {
                 moveTree?.addChild(node)
         }
 
-        /*if (moveTree != null) Log.d(
-            "TreeNode",
-            "Child: " + moveTree?.value?.initialPiece?.square?.name + " - " + moveTree?.value?.finalPiece?.square?.name
-        )*/
+        chessPieceListener?.onPgnUpdated(finalMove.square.value())
         savePgn(finalMove)
     }
 
@@ -688,9 +685,5 @@ class ChessModel {
         }
         desc += "  0 1 2 3 4 5 6 7"
         return desc
-    }
-
-    fun setListener(chessPieceListener: ChessPieceListener) {
-        this.chessPieceListener = chessPieceListener
     }
 }

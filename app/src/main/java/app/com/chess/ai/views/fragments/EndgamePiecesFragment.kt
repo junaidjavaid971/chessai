@@ -9,7 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import app.com.chess.ai.R
+import app.com.chess.ai.adapters.PgnAdapter
 import app.com.chess.ai.databinding.FragmentEndgameBinding
 import app.com.chess.ai.test.*
 import app.com.chess.ai.views.activities.BaseActivity
@@ -26,7 +28,9 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate, ChessPieceListener {
     private val TAG = "EndgameFragment"
     var baseActivity: BaseActivity<FragmentEndgameBinding>? = null
     lateinit var binding: FragmentEndgameBinding
-    var count = 0
+    val pgnArrayList = ArrayList<String>()
+    lateinit var pgnAdapter: PgnAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,11 +50,21 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate, ChessPieceListener {
         chessView.chessDelegate = this
 
         binding.ivArrowLeft.setOnClickListener {
+            pgnAdapter.currentMoveIndex--
+            if (pgnAdapter.currentMoveIndex < 0) {
+                pgnAdapter.currentMoveIndex = 0
+            }
+            pgnAdapter.notifyDataSetChanged()
             chessModel.restoreLeftMove()
             chessView.invalidate()
         }
 
         binding.ivArrowRight.setOnClickListener {
+            pgnAdapter.currentMoveIndex++
+            if (pgnAdapter.currentMoveIndex >= pgnArrayList.size) {
+                pgnAdapter.currentMoveIndex = pgnArrayList.size - 1
+            }
+            pgnAdapter.notifyDataSetChanged()
             chessModel.restoreRightMove()
             chessView.invalidate()
         }
@@ -60,6 +74,8 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate, ChessPieceListener {
             intent.putExtra("pgn", chessModel.generatePGN())
             startActivity(intent)
         }
+
+        setPgnAdapter()
     }
 
     override fun pieceAt(col: Int, row: Int): ChessPiece? {
@@ -83,7 +99,7 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate, ChessPieceListener {
         for (i in 0..3) {
             chessModel.clearPossibleMovements()
         }
-        binding.tvPgn.text = chessModel.generatePGN()
+//        binding.tvPgn.text = chessModel.generatePGN()
         chessView.invalidate()
     }
 
@@ -98,6 +114,18 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate, ChessPieceListener {
     override fun drawPiece(possibleMovements: ArrayList<RowCol>) {
         chessModel.drawPossibleMovements(possibleMovements)
         chessView.invalidate()
+    }
+
+    private fun setPgnAdapter() {
+        pgnAdapter = PgnAdapter(pgnArrayList, pgnArrayList.size, activity!!)
+        binding.rvPgn.setLayoutManager(
+            LinearLayoutManager(
+                activity,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+        )
+        binding.rvPgn.adapter = pgnAdapter
     }
 
     private fun savePGN() {
@@ -124,8 +152,14 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate, ChessPieceListener {
         writer.append(pgn + "0-1\n")
         writer.flush()
         writer.close()
-        binding.tvPgn.text = pgn
+//        binding.tvPgn.text = pgn
         val pgnParser = PgnHolder("/storage/emulated/0/updated_pgn.pgn")
         pgnParser.loadPgn()
+    }
+
+    override fun onPgnUpdated(pgn: String) {
+        pgnArrayList.add(pgn)
+        pgnAdapter.currentMoveIndex = pgnArrayList.size - 1
+        pgnAdapter.notifyDataSetChanged()
     }
 }
