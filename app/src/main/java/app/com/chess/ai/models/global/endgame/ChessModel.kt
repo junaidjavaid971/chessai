@@ -1,9 +1,8 @@
-package app.com.chess.ai.test
+package app.com.chess.ai.models.global.endgame
 
 import android.util.Log
 import app.com.chess.ai.R
-import app.com.chess.ai.models.global.PGN
-import com.fasterxml.jackson.core.TreeNode
+import app.com.chess.ai.interfaces.ChessPieceListener
 import com.github.bhlangonijr.chesslib.Board
 import com.github.bhlangonijr.chesslib.Piece
 import com.github.bhlangonijr.chesslib.Side
@@ -443,15 +442,10 @@ class ChessModel {
         }
         if (currentMoveCount >= 0) {
             currentNode = moveTree?.children?.get(currentMoveCount)
-            /*if ((currentMoveCount + 1) == moveTree?.children?.size) {
-                currentNode = moveTree?.children?.get(currentMoveCount)
-            } else {
-                currentNode = moveTree?.children?.get(currentMoveCount + 1)
-            }*/
+
             if (currentNode?.children?.size == 0) {
                 currentMoveCount++
             }
-
             if (currentMoveCount == -1) {
                 currentMoveCount++
             }
@@ -678,6 +672,7 @@ class ChessModel {
                         ChessRank.PAWN -> {
                             desc += if (white) "p" else "P"
                         }
+                        else -> desc = ""
                     }
                 }
             }

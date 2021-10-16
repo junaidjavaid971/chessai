@@ -1,4 +1,4 @@
-package app.com.chess.ai.models.global
+package app.com.chess.ai.models.global.training
 
 class Displayer {
     var chessSquare: String? = null

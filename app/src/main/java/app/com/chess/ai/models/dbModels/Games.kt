@@ -1,11 +1,10 @@
 package app.com.chess.ai.models.dbModels
 
 import androidx.room.*
-import app.com.chess.ai.models.global.Positions
+import app.com.chess.ai.models.global.endgame.Positions
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.Serializable
-import java.util.*
 import kotlin.collections.ArrayList
 
 @Entity

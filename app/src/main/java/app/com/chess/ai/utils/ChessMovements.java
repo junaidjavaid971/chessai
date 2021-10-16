@@ -1,11 +1,9 @@
 package app.com.chess.ai.utils;
 
-import android.content.Intent;
-
 import java.util.ArrayList;
 
 import app.com.chess.ai.enums.ChessPieceEnum;
-import app.com.chess.ai.models.global.ChessPiece;
+import app.com.chess.ai.models.global.training.ChessPiece;
 
 public class ChessMovements {
     public ChessMovements() {
@@ -80,14 +78,14 @@ public class ChessMovements {
         boolean stopRight = false;
         boolean stopLeft = false;
         int bottom = position + 8;
-        if (bottom <= 63 && chessPieceArrayList.get(bottom).piece == ChessPieceEnum.EMPTY.getChessPiece() && !stopBottom) {
+        if (bottom <= 63 && chessPieceArrayList.get(bottom).piece == ChessPieceEnum.EMPTY.getChessPiece()) {
             movementList.add(bottom);
         } else {
             movementList.add(bottom);
             stopBottom = true;
         }
         int top = position - 8;
-        if (top > 0 && chessPieceArrayList.get(top).piece == ChessPieceEnum.EMPTY.getChessPiece() && !stopTop) {
+        if (top > 0 && chessPieceArrayList.get(top).piece == ChessPieceEnum.EMPTY.getChessPiece()) {
             movementList.add(top);
         } else {
             movementList.add(top);
@@ -97,7 +95,7 @@ public class ChessMovements {
         int right = 0;
         if (position % 8 != 0) {
             left = position - 1;
-            if (chessPieceArrayList.get(left).piece == ChessPieceEnum.EMPTY.getChessPiece() && !stopLeft) {
+            if (chessPieceArrayList.get(left).piece == ChessPieceEnum.EMPTY.getChessPiece()) {
                 movementList.add(left);
             } else {
                 movementList.add(left);
@@ -106,7 +104,7 @@ public class ChessMovements {
         }
         if (((position + 1) % 8) != 0) {
             right = position + 1;
-            if (chessPieceArrayList.get(right).piece == ChessPieceEnum.EMPTY.getChessPiece() && !stopRight) {
+            if (chessPieceArrayList.get(right).piece == ChessPieceEnum.EMPTY.getChessPiece()) {
                 movementList.add(right);
             } else {
                 movementList.add(right);

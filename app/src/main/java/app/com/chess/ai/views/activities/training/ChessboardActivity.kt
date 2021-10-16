@@ -1,11 +1,11 @@
-package app.com.chess.ai.views.activities
+package app.com.chess.ai.views.activities.training
 
 import android.os.Bundle
 import app.com.chess.ai.R
 import app.com.chess.ai.activities.FragmentTrainingChessboardSquares
 import app.com.chess.ai.databinding.ActivityChessboardBinding
 import app.com.chess.ai.enums.Flows
-import app.com.chess.ai.views.fragments.EndgamePiecesFragment
+import app.com.chess.ai.views.activities.BaseActivity
 import app.com.chess.ai.views.fragments.FragmentLevelChessboard
 import app.com.chess.ai.views.fragments.PiecesFragment
 

@@ -1,4 +1,4 @@
-package app.com.chess.ai.models.global
+package app.com.chess.ai.models.dbModels
 
 import com.google.gson.annotations.SerializedName
 import java.util.*

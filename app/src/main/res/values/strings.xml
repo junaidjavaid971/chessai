@@ -18,6 +18,12 @@
     <string name="select_level">Select Level</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="strPemissionDenied">Permissions Required</string>
+    <string name="descPermissionDenied">Requested permissions are required to perform properly!</string>
+    <string name="strOk">Ok</string>
+    <string name="strCancel">Cancel</string>
+    <string name="strOpening">Openings</string>
+    <string name="strTactics">Tactics</string>
 
     <string-array name="array_results">
         <item>Select Result</item>

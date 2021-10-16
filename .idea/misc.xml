@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Documents/Android Studio Projects/AiChess/app/src/main/res/layout/fragment_endgame.xml" value="0.23802083333333332" />
+        <entry key="..\:/Documents/Android Studio Projects/AiChess/app/src/main/res/layout/fragment_training_chessboard.xml" value="0.2421875" />
+        <entry key="..\:/Documents/Android Studio Projects/AiChess/app/src/main/res/layout/fragment_training_options.xml" value="0.2421875" />
         <entry key="..\:/Documents/Android Studio Projects/AiChess/app/src/main/res/layout/layout_save_game.xml" value="0.1265625" />
         <entry key="..\:/Documents/Android Studio Projects/AiChess/app/src/main/res/layout/pgn_layout.xml" value="0.2421875" />
       </map>

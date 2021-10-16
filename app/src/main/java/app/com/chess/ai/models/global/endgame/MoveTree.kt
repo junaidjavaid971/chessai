@@ -1,4 +1,4 @@
-package app.com.chess.ai.test
+package app.com.chess.ai.models.global.endgame
 
 import com.github.bhlangonijr.chesslib.move.Move
 import java.util.*

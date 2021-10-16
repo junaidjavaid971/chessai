@@ -1,7 +1,4 @@
-package app.com.chess.ai.test
-
-import com.github.bhlangonijr.chesslib.Square
-import com.github.bhlangonijr.chesslib.move.Move
+package app.com.chess.ai.models.global.endgame
 
 data class ChessMove(
     val initialPosition: MovingPieces,

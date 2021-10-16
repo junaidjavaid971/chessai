@@ -14,20 +14,19 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
-import app.com.chess.ai.adapters.DisplayerAdapter
+import app.com.chess.ai.adapters.ResultsDisplayAdapter
 import app.com.chess.ai.adapters.TrainingPiecesAdapter
 import app.com.chess.ai.databinding.FragmentTrainingChessboardBinding
 import app.com.chess.ai.databinding.ProgressDialogRowBinding
 import app.com.chess.ai.enums.ChessPieceEnum
 import app.com.chess.ai.interfaces.ChessBoardListener
-import app.com.chess.ai.models.global.ChessPiece
-import app.com.chess.ai.models.global.Displayer
+import app.com.chess.ai.models.global.training.ChessPiece
+import app.com.chess.ai.models.global.training.Displayer
 import app.com.chess.ai.utils.ChessMovements
 import app.com.chess.ai.utils.KnightSteps
 import app.com.chess.ai.utils.SharePrefData
 import app.com.chess.ai.views.activities.BaseActivity
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -211,7 +210,7 @@ class PiecesFragment : Fragment(), ChessBoardListener {
     private fun initDisplayerAdapter() {
         binding.rvDisplayer.layoutManager =
             GridLayoutManager(requireActivity(), 6)
-        val adapter = DisplayerAdapter(arrayList)
+        val adapter = ResultsDisplayAdapter(arrayList)
         binding.rvDisplayer.adapter = adapter
     }
 

@@ -1,4 +1,4 @@
-package app.com.chess.ai.models.global;
+package app.com.chess.ai.models.global.training;
 
 import com.github.bhlangonijr.chesslib.Square;
 

@@ -1,32 +1,33 @@
-package app.com.chess.ai.test
+package app.com.chess.ai.views
 
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import app.com.chess.ai.R
-import kotlin.math.min
-import android.graphics.Bitmap
-
-import androidx.core.graphics.drawable.DrawableCompat
-
-import android.os.Build
-
 import androidx.core.content.ContextCompat
+import app.com.chess.ai.R
+import app.com.chess.ai.interfaces.ChessDelegate
+import app.com.chess.ai.models.global.endgame.ChessModel
+import app.com.chess.ai.models.global.endgame.ChessPiece
+import kotlin.math.min
 
 
 class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
+
+    //Constants & Variables
     private var originX = 20f
     private var originY = 200f
     private var cellSide = 130f
-    private val TAG = "MainActivityTAG"
-    private val MTAG = "MovementTAG"
-    private var movingPiece: ChessPiece? = null
     private val scaleFactor = .9f
+
+    //Objects
     private val paint = Paint()
+    private var movingPiece: ChessPiece? = null
     private var movingPieceBitmap: Bitmap? = null
-    private final val lightColor = resources.getColor(R.color.colorWhite)
+
+    //Colors
+    private val lightColor = resources.getColor(R.color.colorWhite)
     private val darkColor = resources.getColor(R.color.colorOrange)
 
     private val bitmaps = mutableMapOf<Int, Bitmap>()
@@ -53,7 +54,6 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     init {
         loadBitmaps()
-//        chessModel = ChessModel(this)
         chessModel = ChessModel()
     }
 
@@ -73,10 +73,6 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         event ?: return false
 
         when (event.action) {
-            MotionEvent.ACTION_MOVE -> {
-                /*movingPieceX = event.x
-                movingPieceY = event.y*/
-            }
             MotionEvent.ACTION_UP -> {
                 val col = ((event.x - originX) / cellSide).toInt()
                 val row = 7 - ((event.y - originY) / cellSide).toInt()
@@ -159,10 +155,7 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     }
 
     fun getBitmapFromVectorDrawable(drawableId: Int): Bitmap {
-        var drawable = ContextCompat.getDrawable(context!!, drawableId)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = DrawableCompat.wrap(drawable!!).mutate()
-        }
+        val drawable = ContextCompat.getDrawable(context!!, drawableId)
         val bitmap = Bitmap.createBitmap(
             drawable!!.intrinsicWidth,
             drawable.intrinsicHeight, Bitmap.Config.ARGB_8888
@@ -184,19 +177,5 @@ class ChessView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
             paint
         )
     }
-
-    /*override fun chessPieceClicked(fromCol: Int, fromRow: Int, col: Int, row: Int) {
-        chessDelegate?.movePiece(fromCol, fromRow, col, row)
-        movingPiece = null
-        movingPieceBitmap = null
-    }
-
-    override fun showToast(message: String) {
-        chessDelegate?.showToast(message)
-    }
-
-    override fun drawPiece(possibleMovements: ArrayList<RowCol>) {
-        chessDelegate?.drawPiece(possibleMovements)
-    }*/
 
 }

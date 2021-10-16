@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorPrimary"
-            tools:context=".views.activities.ChessboardActivity">
+            tools:context=".views.activities.training.ChessboardActivity">
 
             <TextView
                 android:id="@+id/tv_currentSquare"
@@ -102,9 +102,10 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_displayer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_60sdp"
                 android:layout_marginStart="@dimen/_30sdp"
                 android:layout_marginEnd="@dimen/_30sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
                 app:cardBackgroundColor="@color/colorPrimaryDark"
                 app:cardCornerRadius="@dimen/_10sdp"
                 app:layout_constraintBottom_toTopOf="@id/cv_message"
@@ -127,8 +128,9 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_message"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_50sdp"
                 android:layout_marginStart="@dimen/_30sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_30sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 app:cardBackgroundColor="@color/colorPrimaryDark"
@@ -145,7 +147,7 @@
                     android:padding="@dimen/_10sdp"
                     android:text="@string/app_name"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/_14ssp" />
+                    android:textSize="@dimen/_10ssp" />
 
             </androidx.cardview.widget.CardView>
 

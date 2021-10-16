@@ -1,4 +1,6 @@
-package app.com.chess.ai.test
+package app.com.chess.ai.interfaces
+
+import app.com.chess.ai.models.global.endgame.RowCol
 
 interface ChessPieceListener {
     fun chessPieceClicked(fromCol: Int, fromRow: Int, col: Int, row: Int)

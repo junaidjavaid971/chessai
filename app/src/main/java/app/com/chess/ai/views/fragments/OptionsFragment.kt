@@ -1,6 +1,5 @@
 package app.com.chess.ai.views.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,11 +8,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import app.com.chess.ai.R
 import app.com.chess.ai.databinding.FragmentOptionsBinding
-import app.com.chess.ai.databinding.FragmentTrainingChessboardBinding
-import app.com.chess.ai.enums.Flows
 import app.com.chess.ai.views.activities.BaseActivity
-import app.com.chess.ai.views.activities.ChessboardActivity
-import app.com.chess.ai.views.activities.LevelsActivity
+import app.com.chess.ai.views.activities.training.LevelsActivity
 
 class OptionsFragment : Fragment() {
 

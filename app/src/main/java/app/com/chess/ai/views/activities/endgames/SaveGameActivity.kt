@@ -1,4 +1,4 @@
-package app.com.chess.ai.views.activities
+package app.com.chess.ai.views.activities.endgames
 
 import android.os.AsyncTask
 import android.os.Bundle
@@ -7,32 +7,28 @@ import android.widget.Toast
 import app.com.chess.ai.R
 import app.com.chess.ai.databinding.LayoutSaveGameBinding
 import app.com.chess.ai.models.dbModels.Games
-import app.com.chess.ai.models.global.Positions
 import app.com.chess.ai.utils.DatabaseClient
+import app.com.chess.ai.views.activities.BaseActivity
 import com.github.bhlangonijr.chesslib.pgn.PgnHolder
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class SaveGameActivity : BaseActivity<LayoutSaveGameBinding>() {
+
+    //Variables
     private var pgn = ""
     private var tournamentName = ""
     private var black = ""
     private var white = ""
     private var result = ""
-    var fenArrayList: ArrayList<String> = ArrayList()
-    var positionArrayList: ArrayList<Positions> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindView(R.layout.layout_save_game)
 
         pgn = intent?.getStringExtra("pgn").toString()
-//        fenArrayList = intent?.getStringArrayListExtra("fenArray") as ArrayList<String>
-//        positionArrayList = (intent?.getSerializableExtra("positionArray") as ArrayList<Positions>)
-
         binding?.btnSave?.setOnClickListener {
             if (validateInfo()) {
                 savePgn()
@@ -84,17 +80,6 @@ class SaveGameActivity : BaseActivity<LayoutSaveGameBinding>() {
 
         val pgnParser = PgnHolder("/storage/emulated/0/pgnFile.pgn")
         pgnParser.loadPgn()
-
-        /*val game = Games()
-        game.tournamentName = tournamentName
-        game.eventDate = getTodayDate()
-        game.pgn = pgn
-
-        game.fenList = fenArrayList
-        game.positionsList = positionArrayList
-
-        val saveGame = SaveGame()
-        saveGame.execute(game)*/
     }
 
     private fun getTodayDate(): String {

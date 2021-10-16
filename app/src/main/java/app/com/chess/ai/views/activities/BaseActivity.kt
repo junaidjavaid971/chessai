@@ -24,6 +24,8 @@ import java.util.*
 
 
 abstract class BaseActivity<Binding : ViewDataBinding> : AppCompatActivity() {
+
+    //Objects
     protected var binding: Binding? = null
     var mCurrentFragment: Fragment? = null
     var appController: _AppController? = null
@@ -59,8 +61,8 @@ abstract class BaseActivity<Binding : ViewDataBinding> : AppCompatActivity() {
                     context: Context?,
                     blockedList: ArrayList<String>?
                 ): Boolean {
-                    return super.onBlocked(context, blockedList)
                     permissionDeniedDialog()
+                    return super.onBlocked(context, blockedList)
                 }
             })
     }
@@ -68,14 +70,14 @@ abstract class BaseActivity<Binding : ViewDataBinding> : AppCompatActivity() {
     private fun permissionDeniedDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setCancelable(false)
-        builder.setTitle("Permissions Required")
-        builder.setMessage("Requested permissions are required to perform properly!")
+        builder.setTitle(getString(R.string.strPemissionDenied))
+        builder.setMessage(getString(R.string.descPermissionDenied))
         builder.setPositiveButton(
-            "Ok"
-        ) { dialogInterface, i -> askPermissions() }
+            getString(R.string.strOk)
+        ) { _, _ -> askPermissions() }
         builder.setNegativeButton(
-            "Cancel"
-        ) { dialogInterface, i -> }
+            getString(R.string.strCancel)
+        ) { _, _ -> }
         builder.show()
     }
 
@@ -181,9 +183,9 @@ abstract class BaseActivity<Binding : ViewDataBinding> : AppCompatActivity() {
         startActivity(intent)
     }
 
-    open fun addActivity(cls: Class<*>?, id : Int) {
+    open fun addActivity(cls: Class<*>?, id: Int) {
         val intent = Intent(this, cls)
-        intent.putExtra("ID" , id)
+        intent.putExtra("ID", id)
         startActivity(intent)
     }
 
@@ -209,7 +211,6 @@ abstract class BaseActivity<Binding : ViewDataBinding> : AppCompatActivity() {
             t.add(R.id.container, fragment, fragment::class.java.simpleName)
                 .addToBackStack(fragment::class.java.simpleName).commit()
         } catch (e: Exception) {
-            Log.e("ex", "repalceFrag funcation Exception in base Activity ")
             val t = manager.beginTransaction()
             t.add(R.id.container, fragment, fragment::class.java.simpleName)
                 .addToBackStack(fragment::class.java.simpleName).commit()
@@ -222,9 +223,6 @@ abstract class BaseActivity<Binding : ViewDataBinding> : AppCompatActivity() {
         try {
             baseViewModel.dialogLiveData.observe(this@BaseActivity, Observer {
                 showHideProgress(it)
-            })
-            baseViewModel.errorLiveData.observe(this@BaseActivity, Observer {
-                Log.d("errrorscreen", baseActivity::class.java.name + " Screen")
             })
         } catch (ex: java.lang.Exception) {
             print(ex.localizedMessage)

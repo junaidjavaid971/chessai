@@ -1,4 +1,4 @@
-package app.com.chess.ai.models.global
+package app.com.chess.ai.models.global.endgame
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

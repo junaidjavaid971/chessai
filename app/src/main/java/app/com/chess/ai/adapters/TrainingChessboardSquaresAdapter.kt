@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
 import app.com.chess.ai.interfaces.ChessBoardListener
-import app.com.chess.ai.models.global.PreviouslyClickedSquare
+import app.com.chess.ai.models.global.training.PreviouslyClickedSquare
 
 class TrainingChessboardSquaresAdapter(
     private val context: Context,
@@ -20,9 +20,12 @@ class TrainingChessboardSquaresAdapter(
     val previouslyClickedSquare: PreviouslyClickedSquare
 ) :
     RecyclerView.Adapter<TrainingChessboardSquaresAdapter.TrainingChessboardViewHolder>() {
+
+    //Variables
     private var isOrange = true
     private var count = 8
     private var alphabet = 65
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int

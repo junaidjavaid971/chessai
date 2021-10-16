@@ -4,16 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.content.contentValuesOf
 import androidx.recyclerview.widget.RecyclerView
 import app.com.chess.ai.R
-import app.com.chess.ai.models.global.Displayer
 
 class PgnAdapter(
-    val pgnArrayList: ArrayList<String>,
+    private val pgnArrayList: ArrayList<String>,
     var currentMoveIndex: Int,
     var context: Context
 ) :

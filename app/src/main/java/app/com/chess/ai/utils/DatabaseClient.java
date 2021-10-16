@@ -6,13 +6,11 @@ import androidx.room.Room;
 
 public class DatabaseClient {
 
-    private Context mCtx;
     private static DatabaseClient mInstance;
-
-    private AppDatabase appDatabase;
+    private final AppDatabase appDatabase;
 
     private DatabaseClient(Context mCtx) {
-        this.mCtx = mCtx;
+        //Objects
         appDatabase = Room.databaseBuilder(mCtx, AppDatabase.class, "chess_ai_db").fallbackToDestructiveMigration().build();
     }
 

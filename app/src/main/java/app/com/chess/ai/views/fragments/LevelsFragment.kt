@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import app.com.chess.ai.R
 import app.com.chess.ai.adapters.LevelsAdapter
 import app.com.chess.ai.databinding.FragmentLevelsBinding
-import app.com.chess.ai.models.global.Level
+import app.com.chess.ai.models.global.training.Level
 
 class LevelsFragment(val levelsArrayList: MutableList<Level>) : Fragment() {
 

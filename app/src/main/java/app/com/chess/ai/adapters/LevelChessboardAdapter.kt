@@ -23,9 +23,12 @@ class LevelChessboardAdapter(
     private val previouslyClickedSquare: FragmentLevelChessboard.PreviouslyClickedSquare
 ) :
     RecyclerView.Adapter<LevelChessboardAdapter.LevelChessboardViewHolder>() {
+
+    //Variables
     private var isOrange = false
     private var count = 8
     private var alphabet = 65
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LevelChessboardViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.board_component, parent, false)
@@ -44,7 +47,6 @@ class LevelChessboardAdapter(
                 holder.tvAlphabet.visibility = View.VISIBLE
                 holder.tvAlphabet.text = count.toString()
                 holder.tvAletter.text = "A"
-                //alphabet.toChar().toString()
                 alphabet++
                 drawChessSquare(holder, position)
                 if (position == previouslyClickedSquare.squarePosition) {

@@ -18,9 +18,9 @@ import app.com.chess.ai.adapters.SquaresDisplayerAdapter
 import app.com.chess.ai.databinding.FragmentTrainingChessboardBinding
 import app.com.chess.ai.databinding.ProgressDialogRowBinding
 import app.com.chess.ai.interfaces.ChessBoardListener
-import app.com.chess.ai.models.global.ChessPiece
-import app.com.chess.ai.models.global.ChessSquare
-import app.com.chess.ai.models.global.Displayer
+import app.com.chess.ai.models.global.training.ChessPiece
+import app.com.chess.ai.models.dbModels.ChessSquare
+import app.com.chess.ai.models.global.training.Displayer
 import app.com.chess.ai.utils.SharePrefData
 import com.google.gson.Gson
 import java.io.IOException

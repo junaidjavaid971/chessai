@@ -12,9 +12,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
-import app.com.chess.ai.enums.ChessPieceEnum
 import app.com.chess.ai.interfaces.ChessBoardListener
-import app.com.chess.ai.models.global.ChessPiece
+import app.com.chess.ai.models.global.training.ChessPiece
 
 class TrainingPiecesAdapter(
     private val context: Context,
@@ -25,10 +24,13 @@ class TrainingPiecesAdapter(
     val movementArray: ArrayList<Int>
 ) :
     RecyclerView.Adapter<TrainingPiecesAdapter.TrainingChessboardViewHolder>() {
+
+    //Variables
     private var isOrange = false
     private var count = 8
     private var alphabet = 65
     var arrayList: ArrayList<Int> = IntRange(0, 63).step(1).toList() as ArrayList<Int>
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int

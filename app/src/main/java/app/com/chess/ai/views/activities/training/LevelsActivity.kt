@@ -1,4 +1,4 @@
-package app.com.chess.ai.views.activities
+package app.com.chess.ai.views.activities.training
 
 import android.os.Bundle
 import androidx.annotation.NonNull
@@ -8,8 +8,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import app.com.chess.ai.R
 import app.com.chess.ai._AppController
 import app.com.chess.ai.databinding.ActivityLevelsBinding
-import app.com.chess.ai.models.global.ChessSquare
-import app.com.chess.ai.models.global.Level
+import app.com.chess.ai.models.dbModels.ChessSquare
+import app.com.chess.ai.models.global.training.Level
+import app.com.chess.ai.views.activities.BaseActivity
 import app.com.chess.ai.views.fragments.LevelsFragment
 import com.google.gson.Gson
 import kotlin.math.ceil

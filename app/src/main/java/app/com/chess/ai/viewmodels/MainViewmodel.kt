@@ -21,15 +21,4 @@ class MainViewmodel(application: Application) : BaseViewModel(application) {
             }
         }
     }
-
-    fun onOptionSelected(v: View) {
-        when (v.id) {
-            R.id.layout_training -> {
-                viewClickedLiveData.postValue(R.id.layout_training)
-            }
-            R.id.layout_levels -> {
-                viewClickedLiveData.postValue(R.id.layout_levels)
-            }
-        }
-    }
 }

@@ -11,24 +11,14 @@ import app.com.chess.ai.utils.SharePrefData
 class _AppController : MultiDexApplication() {
 
     companion object {
-        var token: String = ""
+        //Constants
+        const val showAlphabets = true
+        const val levelsPerPage = 16
+        const val timer: Long = 60000 //30000ms is 30 sec.
+
+        //Objects
         var INSTANCE: _AppController? = null
-        val showAlphabets = true
-        val levelsPerPage = 16
-        val timer: Long = 60000 //30000ms is 30 sec.
         var baseActivity: BaseActivity<ViewDataBinding>? = null
-
-        fun setActivity(activity: BaseActivity<ViewDataBinding>) {
-            baseActivity = activity
-        }
-
-        fun getActivity(): BaseActivity<ViewDataBinding>? {
-            return baseActivity
-        }
-
-        fun getInstance(): _AppController? {
-            return INSTANCE
-        }
     }
 
     override fun onCreate() {

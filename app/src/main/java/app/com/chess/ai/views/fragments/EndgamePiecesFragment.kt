@@ -13,9 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import app.com.chess.ai.R
 import app.com.chess.ai.adapters.PgnAdapter
 import app.com.chess.ai.databinding.FragmentEndgameBinding
-import app.com.chess.ai.test.*
+import app.com.chess.ai.interfaces.ChessDelegate
+import app.com.chess.ai.interfaces.ChessPieceListener
+import app.com.chess.ai.models.global.endgame.ChessModel
+import app.com.chess.ai.models.global.endgame.ChessPiece
+import app.com.chess.ai.models.global.endgame.RowCol
+import app.com.chess.ai.views.ChessView
 import app.com.chess.ai.views.activities.BaseActivity
-import app.com.chess.ai.views.activities.SaveGameActivity
+import app.com.chess.ai.views.activities.endgames.SaveGameActivity
 import com.github.bhlangonijr.chesslib.pgn.PgnHolder
 import java.io.File
 import java.io.FileWriter

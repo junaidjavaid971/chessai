@@ -4,25 +4,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import app.com.chess.ai.R
 import app.com.chess.ai.models.global.training.Displayer
 
-class SquaresDisplayerAdapter(
-    val displayerList: ArrayList<Displayer>
+class ResultsDisplayAdapter(
+    private val displayList: ArrayList<Displayer>
 ) :
-    RecyclerView.Adapter<SquaresDisplayerAdapter.DisplayerViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DisplayerViewHolder {
+    RecyclerView.Adapter<ResultsDisplayAdapter.DisplayViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DisplayViewHolder {
         val itemView =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.squares_displayer_row, parent, false)
-        return DisplayerViewHolder(itemView)
+            LayoutInflater.from(parent.context).inflate(R.layout.displayer_row, parent, false)
+        return DisplayViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: DisplayerViewHolder, position: Int) {
-        val displayer = displayerList[position]
-        when (displayer.isCorrect) {
+    override fun onBindViewHolder(holder: DisplayViewHolder, position: Int) {
+        val display = displayList[position]
+        when (display.isCorrect) {
             true -> {
                 holder.llCorrect.visibility = View.VISIBLE
                 holder.llWrong.visibility = View.GONE
@@ -32,15 +30,13 @@ class SquaresDisplayerAdapter(
                 holder.llWrong.visibility = View.VISIBLE
             }
         }
-        holder.tvSquare.text = displayer.chessSquare
     }
 
     override fun getItemCount(): Int {
-        return displayerList.size
+        return displayList.size
     }
 
-    class DisplayerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvSquare: TextView = itemView.findViewById<View>(R.id.tvSquare) as TextView
+    class DisplayViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var llCorrect: LinearLayout = itemView.findViewById<View>(R.id.ll_correct) as LinearLayout
         var llWrong: LinearLayout = itemView.findViewById<View>(R.id.ll_wrong) as LinearLayout
     }

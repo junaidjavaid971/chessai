@@ -1,4 +1,6 @@
-package app.com.chess.ai.test
+package app.com.chess.ai.interfaces
+
+import app.com.chess.ai.models.global.endgame.ChessPiece
 
 interface ChessDelegate {
     fun pieceAt(col: Int, row: Int): ChessPiece?

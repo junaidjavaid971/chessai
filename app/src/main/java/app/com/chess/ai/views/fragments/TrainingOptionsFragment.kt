@@ -8,13 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import app.com.chess.ai.R
-import app.com.chess.ai.databinding.FragmentOptionsBinding
-import app.com.chess.ai.databinding.FragmentTrainingChessboardBinding
 import app.com.chess.ai.databinding.FragmentTrainingOptionsBinding
 import app.com.chess.ai.enums.Flows
 import app.com.chess.ai.views.activities.BaseActivity
-import app.com.chess.ai.views.activities.ChessboardActivity
-import app.com.chess.ai.views.activities.LevelsActivity
+import app.com.chess.ai.views.activities.training.ChessboardActivity
 
 class TrainingOptionsFragment : Fragment() {
 

@@ -13,9 +13,9 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".views.activities.SaveGameActivity"></activity>
-        <activity android:name=".views.activities.LevelsActivity" />
-        <activity android:name=".views.activities.ChessboardActivity" />
+        <activity android:name=".views.activities.endgames.SaveGameActivity"></activity>
+        <activity android:name=".views.activities.training.LevelsActivity" />
+        <activity android:name=".views.activities.training.ChessboardActivity" />
         <activity android:name=".views.activities.OptionsActivity" />
         <activity android:name=".views.activities.SplashActivity">
             <intent-filter>

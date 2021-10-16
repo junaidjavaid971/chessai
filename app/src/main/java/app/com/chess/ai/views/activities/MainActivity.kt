@@ -24,18 +24,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun setObservers() {
         viewModel.viewClickedLiveData.observe(this, {
             when (it) {
-                R.id.layout_visualization -> {
-                    addActivity(OptionsActivity::class.java, 1)
-                }
-                R.id.layout_endGames -> {
-                    addActivity(OptionsActivity::class.java, 2)
-                }
-                R.id.layout_openings -> {
-                    showToast("Openings")
-                }
-                R.id.layout_tactics -> {
-                    showToast("Tactics")
-                }
+                R.id.layout_visualization -> addActivity(OptionsActivity::class.java, 1)
+                R.id.layout_endGames -> addActivity(OptionsActivity::class.java, 2)
+                R.id.layout_openings -> showToast(getString(R.string.strOpening))
+                R.id.layout_tactics -> showToast(getString(R.string.strTactics))
             }
         })
     }
