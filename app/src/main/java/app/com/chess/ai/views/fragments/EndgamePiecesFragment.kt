@@ -9,7 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import app.com.chess.ai.R
 import app.com.chess.ai.adapters.PgnAdapter
 import app.com.chess.ai.databinding.FragmentEndgameBinding
@@ -104,7 +106,6 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate, ChessPieceListener {
         for (i in 0..3) {
             chessModel.clearPossibleMovements()
         }
-//        binding.tvPgn.text = chessModel.generatePGN()
         chessView.invalidate()
     }
 
@@ -122,13 +123,10 @@ class EndgamePiecesFragment : Fragment(), ChessDelegate, ChessPieceListener {
     }
 
     private fun setPgnAdapter() {
-        pgnAdapter = PgnAdapter(pgnArrayList, pgnArrayList.size, activity!!)
-        binding.rvPgn.setLayoutManager(
-            LinearLayoutManager(
-                activity,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
+        pgnAdapter = PgnAdapter(pgnArrayList, pgnArrayList.size, requireActivity())
+        binding.rvPgn.layoutManager = GridLayoutManager(
+            activity,
+            8,
         )
         binding.rvPgn.adapter = pgnAdapter
     }

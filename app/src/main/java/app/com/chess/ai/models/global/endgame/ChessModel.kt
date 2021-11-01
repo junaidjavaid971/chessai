@@ -62,6 +62,8 @@ class ChessModel {
     var currentMoveCount = -1
     var nestedNodeSize = -1
 
+    var isLeftRightClicked = false;
+
     init {
         initRowColBinding()
         initBoard()
@@ -352,6 +354,9 @@ class ChessModel {
 
             }
             if (currentMoveCount != -1) {
+                if (currentMoveCount > moveTree?.children?.size!!) {
+                    currentMoveCount = moveTree?.children?.size!!
+                }
                 var temp = moveTree?.children?.get(currentMoveCount)!!
                 if (nestedNodeSize != -1) {
                     temp = node.children.get(nestedNodeSize)
@@ -392,9 +397,13 @@ class ChessModel {
     }
 
     fun restoreLeftMove() {
-        if (currentMoveCount < 0 || currentMoveCount >= movesList.size) {
+        if (currentMoveCount >= moveTree?.children?.size!! || !isLeftRightClicked) {
+            isLeftRightClicked = true
             currentMoveCount = moveTree?.children?.size!! - 1
+        } else if (currentMoveCount < 0) {
+            currentMoveCount = 0
         }
+
         if (currentMoveCount >= 0) {
             currentNode = moveTree?.children?.get(currentMoveCount)
             if (currentNode?.children?.size == 0) {
@@ -437,8 +446,11 @@ class ChessModel {
     }
 
     fun restoreRightMove() {
-        if (currentMoveCount >= moveTree?.children?.size!! || currentMoveCount < 0) {
+        if (currentMoveCount >= moveTree?.children?.size!!) {
+            currentMoveCount = moveTree?.children?.size!! - 1
+        } else if (currentMoveCount < 0 || !isLeftRightClicked) {
             currentMoveCount = 0
+            isLeftRightClicked = true
         }
         if (currentMoveCount >= 0) {
             currentNode = moveTree?.children?.get(currentMoveCount)
